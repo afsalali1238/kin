@@ -7,7 +7,7 @@
       80
     ],
     "label": "Forehead",
-    "labelAr": "منطقة الجسم",
+    "labelAr": "الجبهة",
     "side": "center",
     "view": "both",
     "group": "neck",
@@ -36,7 +36,7 @@
       80
     ],
     "label": "Jaw",
-    "labelAr": "منطقة الجسم",
+    "labelAr": "الفك",
     "side": "center",
     "view": "both",
     "group": "neck",
@@ -94,7 +94,7 @@
       80
     ],
     "label": "Chest",
-    "labelAr": "منطقة الجسم",
+    "labelAr": "الصدر",
     "side": "center",
     "view": "both",
     "group": "upper-back",
@@ -146,7 +146,7 @@
       80
     ],
     "label": "Abdomen",
-    "labelAr": "منطقة الجسم",
+    "labelAr": "البطن",
     "side": "center",
     "view": "both",
     "group": "lower-back",
