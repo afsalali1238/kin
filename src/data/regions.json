@@ -1,0 +1,903 @@
+[
+  {
+    "id": "forehead",
+    "maskColor": [
+      7,
+      40,
+      80
+    ],
+    "label": "Forehead",
+    "labelAr": "منطقة الجسم",
+    "side": "center",
+    "view": "both",
+    "group": "neck",
+    "focusTarget": [
+      0.0,
+      1.72,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "jaw",
+      "neck"
+    ],
+    "presentationIds": [
+      "neck-mechanical",
+      "neck-postural",
+      "neck-headache",
+      "cervical-radicular"
+    ]
+  },
+  {
+    "id": "jaw",
+    "maskColor": [
+      14,
+      40,
+      80
+    ],
+    "label": "Jaw",
+    "labelAr": "منطقة الجسم",
+    "side": "center",
+    "view": "both",
+    "group": "neck",
+    "focusTarget": [
+      0.0,
+      1.6,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "forehead",
+      "neck"
+    ],
+    "presentationIds": [
+      "neck-mechanical",
+      "neck-postural",
+      "neck-headache",
+      "cervical-radicular"
+    ]
+  },
+  {
+    "id": "neck",
+    "maskColor": [
+      21,
+      40,
+      80
+    ],
+    "label": "Neck",
+    "labelAr": "الرقبة",
+    "side": "center",
+    "view": "both",
+    "group": "neck",
+    "focusTarget": [
+      0.0,
+      1.49,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "forehead",
+      "jaw"
+    ],
+    "presentationIds": [
+      "neck-mechanical",
+      "neck-postural",
+      "neck-headache",
+      "cervical-radicular"
+    ]
+  },
+  {
+    "id": "chest",
+    "maskColor": [
+      28,
+      40,
+      80
+    ],
+    "label": "Chest",
+    "labelAr": "منطقة الجسم",
+    "side": "center",
+    "view": "both",
+    "group": "upper-back",
+    "focusTarget": [
+      0.0,
+      1.3,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "upper-back"
+    ],
+    "presentationIds": [
+      "thoracic",
+      "rib"
+    ]
+  },
+  {
+    "id": "upper-back",
+    "maskColor": [
+      35,
+      40,
+      80
+    ],
+    "label": "Upper Back",
+    "labelAr": "أعلى الظهر",
+    "side": "center",
+    "view": "back",
+    "group": "upper-back",
+    "focusTarget": [
+      0.0,
+      1.3,
+      -0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "chest"
+    ],
+    "presentationIds": [
+      "thoracic",
+      "rib"
+    ]
+  },
+  {
+    "id": "abdomen",
+    "maskColor": [
+      42,
+      40,
+      80
+    ],
+    "label": "Abdomen",
+    "labelAr": "منطقة الجسم",
+    "side": "center",
+    "view": "both",
+    "group": "lower-back",
+    "focusTarget": [
+      0.0,
+      1.12,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "lower-back"
+    ],
+    "presentationIds": [
+      "back-flexion",
+      "back-extension",
+      "lumbar-radicular",
+      "si-joint"
+    ]
+  },
+  {
+    "id": "lower-back",
+    "maskColor": [
+      49,
+      40,
+      80
+    ],
+    "label": "Lower Back",
+    "labelAr": "أسفل الظهر",
+    "side": "center",
+    "view": "back",
+    "group": "lower-back",
+    "focusTarget": [
+      0.0,
+      1.12,
+      -0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "abdomen"
+    ],
+    "presentationIds": [
+      "back-flexion",
+      "back-extension",
+      "lumbar-radicular",
+      "si-joint"
+    ]
+  },
+  {
+    "id": "shoulder-left",
+    "maskColor": [
+      56,
+      40,
+      80
+    ],
+    "label": "Shoulder · Left",
+    "labelAr": "الكتف · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "shoulder",
+    "focusTarget": [
+      0.3,
+      1.43,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "shoulder-right",
+      "upper-arm-left",
+      "upper-arm-right"
+    ],
+    "presentationIds": [
+      "rotator-cuff",
+      "subacromial",
+      "frozen-shoulder",
+      "ac-joint"
+    ]
+  },
+  {
+    "id": "shoulder-right",
+    "maskColor": [
+      63,
+      40,
+      80
+    ],
+    "label": "Shoulder · Right",
+    "labelAr": "الكتف · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "shoulder",
+    "focusTarget": [
+      -0.3,
+      1.43,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "shoulder-left",
+      "upper-arm-left",
+      "upper-arm-right"
+    ],
+    "presentationIds": [
+      "rotator-cuff",
+      "subacromial",
+      "frozen-shoulder",
+      "ac-joint"
+    ]
+  },
+  {
+    "id": "upper-arm-left",
+    "maskColor": [
+      70,
+      40,
+      80
+    ],
+    "label": "Upper Arm · Left",
+    "labelAr": "منطقة الجسم · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "shoulder",
+    "focusTarget": [
+      0.3,
+      1.26,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "shoulder-left",
+      "shoulder-right",
+      "upper-arm-right"
+    ],
+    "presentationIds": [
+      "rotator-cuff",
+      "subacromial",
+      "frozen-shoulder",
+      "ac-joint"
+    ]
+  },
+  {
+    "id": "upper-arm-right",
+    "maskColor": [
+      77,
+      40,
+      80
+    ],
+    "label": "Upper Arm · Right",
+    "labelAr": "منطقة الجسم · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "shoulder",
+    "focusTarget": [
+      -0.3,
+      1.26,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "shoulder-left",
+      "shoulder-right",
+      "upper-arm-left"
+    ],
+    "presentationIds": [
+      "rotator-cuff",
+      "subacromial",
+      "frozen-shoulder",
+      "ac-joint"
+    ]
+  },
+  {
+    "id": "elbow-left",
+    "maskColor": [
+      84,
+      40,
+      80
+    ],
+    "label": "Elbow · Left",
+    "labelAr": "المرفق · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      0.4,
+      1.1,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-right",
+      "forearm-left",
+      "forearm-right"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "elbow-right",
+    "maskColor": [
+      91,
+      40,
+      80
+    ],
+    "label": "Elbow · Right",
+    "labelAr": "المرفق · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      -0.4,
+      1.1,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "forearm-left",
+      "forearm-right"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "forearm-left",
+    "maskColor": [
+      98,
+      40,
+      80
+    ],
+    "label": "Forearm · Left",
+    "labelAr": "منطقة الجسم · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      0.4,
+      0.96,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "elbow-right",
+      "forearm-right"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "forearm-right",
+    "maskColor": [
+      105,
+      40,
+      80
+    ],
+    "label": "Forearm · Right",
+    "labelAr": "منطقة الجسم · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      -0.4,
+      0.96,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "elbow-right",
+      "forearm-left"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "wrist-left",
+    "maskColor": [
+      112,
+      40,
+      80
+    ],
+    "label": "Wrist · Left",
+    "labelAr": "الرسغ · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      0.4,
+      0.84,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "elbow-right",
+      "forearm-left"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "wrist-right",
+    "maskColor": [
+      119,
+      40,
+      80
+    ],
+    "label": "Wrist · Right",
+    "labelAr": "الرسغ · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      -0.4,
+      0.84,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "elbow-right",
+      "forearm-left"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "hand-left",
+    "maskColor": [
+      126,
+      40,
+      80
+    ],
+    "label": "Hand · Left",
+    "labelAr": "اليد · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      0.4,
+      0.72,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "elbow-right",
+      "forearm-left"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "hand-right",
+    "maskColor": [
+      133,
+      40,
+      80
+    ],
+    "label": "Hand · Right",
+    "labelAr": "اليد · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "elbow",
+    "focusTarget": [
+      -0.4,
+      0.72,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "elbow-left",
+      "elbow-right",
+      "forearm-left"
+    ],
+    "presentationIds": [
+      "lateral-elbow",
+      "medial-elbow",
+      "de-quervain",
+      "carpal-tunnel"
+    ]
+  },
+  {
+    "id": "hip-left",
+    "maskColor": [
+      140,
+      40,
+      80
+    ],
+    "label": "Hip · Left",
+    "labelAr": "الورك · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "hip",
+    "focusTarget": [
+      0.12,
+      0.9,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "hip-right",
+      "thigh-left",
+      "thigh-right"
+    ],
+    "presentationIds": [
+      "gluteal-tendon",
+      "hip-oa",
+      "groin-strain"
+    ]
+  },
+  {
+    "id": "hip-right",
+    "maskColor": [
+      147,
+      40,
+      80
+    ],
+    "label": "Hip · Right",
+    "labelAr": "الورك · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "hip",
+    "focusTarget": [
+      -0.12,
+      0.9,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "hip-left",
+      "thigh-left",
+      "thigh-right"
+    ],
+    "presentationIds": [
+      "gluteal-tendon",
+      "hip-oa",
+      "groin-strain"
+    ]
+  },
+  {
+    "id": "thigh-left",
+    "maskColor": [
+      154,
+      40,
+      80
+    ],
+    "label": "Thigh · Left",
+    "labelAr": "منطقة الجسم · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "hip",
+    "focusTarget": [
+      0.12,
+      0.68,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "hip-left",
+      "hip-right",
+      "thigh-right"
+    ],
+    "presentationIds": [
+      "gluteal-tendon",
+      "hip-oa",
+      "groin-strain"
+    ]
+  },
+  {
+    "id": "thigh-right",
+    "maskColor": [
+      161,
+      40,
+      80
+    ],
+    "label": "Thigh · Right",
+    "labelAr": "منطقة الجسم · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "hip",
+    "focusTarget": [
+      -0.12,
+      0.68,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "hip-left",
+      "hip-right",
+      "thigh-left"
+    ],
+    "presentationIds": [
+      "gluteal-tendon",
+      "hip-oa",
+      "groin-strain"
+    ]
+  },
+  {
+    "id": "knee-left",
+    "maskColor": [
+      168,
+      40,
+      80
+    ],
+    "label": "Knee · Left",
+    "labelAr": "الركبة · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "knee",
+    "focusTarget": [
+      0.12,
+      0.48,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "knee-right"
+    ],
+    "presentationIds": [
+      "patellofemoral",
+      "patellar-tendon",
+      "meniscal",
+      "knee-oa"
+    ]
+  },
+  {
+    "id": "knee-right",
+    "maskColor": [
+      175,
+      40,
+      80
+    ],
+    "label": "Knee · Right",
+    "labelAr": "الركبة · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "knee",
+    "focusTarget": [
+      -0.12,
+      0.48,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "knee-left"
+    ],
+    "presentationIds": [
+      "patellofemoral",
+      "patellar-tendon",
+      "meniscal",
+      "knee-oa"
+    ]
+  },
+  {
+    "id": "calf-left",
+    "maskColor": [
+      182,
+      40,
+      80
+    ],
+    "label": "Calf · Left",
+    "labelAr": "منطقة الجسم · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "ankle",
+    "focusTarget": [
+      0.12,
+      0.3,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "calf-right",
+      "ankle-left",
+      "ankle-right"
+    ],
+    "presentationIds": [
+      "ankle-sprain",
+      "achilles",
+      "plantar-heel"
+    ]
+  },
+  {
+    "id": "calf-right",
+    "maskColor": [
+      189,
+      40,
+      80
+    ],
+    "label": "Calf · Right",
+    "labelAr": "منطقة الجسم · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "ankle",
+    "focusTarget": [
+      -0.12,
+      0.3,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "calf-left",
+      "ankle-left",
+      "ankle-right"
+    ],
+    "presentationIds": [
+      "ankle-sprain",
+      "achilles",
+      "plantar-heel"
+    ]
+  },
+  {
+    "id": "ankle-left",
+    "maskColor": [
+      196,
+      40,
+      80
+    ],
+    "label": "Ankle · Left",
+    "labelAr": "الكاحل · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "ankle",
+    "focusTarget": [
+      0.12,
+      0.12,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "calf-left",
+      "calf-right",
+      "ankle-right"
+    ],
+    "presentationIds": [
+      "ankle-sprain",
+      "achilles",
+      "plantar-heel"
+    ]
+  },
+  {
+    "id": "ankle-right",
+    "maskColor": [
+      203,
+      40,
+      80
+    ],
+    "label": "Ankle · Right",
+    "labelAr": "الكاحل · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "ankle",
+    "focusTarget": [
+      -0.12,
+      0.12,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "calf-left",
+      "calf-right",
+      "ankle-left"
+    ],
+    "presentationIds": [
+      "ankle-sprain",
+      "achilles",
+      "plantar-heel"
+    ]
+  },
+  {
+    "id": "foot-left",
+    "maskColor": [
+      210,
+      40,
+      80
+    ],
+    "label": "Foot · Left",
+    "labelAr": "القدم · يسار",
+    "side": "left",
+    "view": "both",
+    "group": "ankle",
+    "focusTarget": [
+      0.12,
+      0.04,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "calf-left",
+      "calf-right",
+      "ankle-left"
+    ],
+    "presentationIds": [
+      "ankle-sprain",
+      "achilles",
+      "plantar-heel"
+    ]
+  },
+  {
+    "id": "foot-right",
+    "maskColor": [
+      217,
+      40,
+      80
+    ],
+    "label": "Foot · Right",
+    "labelAr": "القدم · يمين",
+    "side": "right",
+    "view": "both",
+    "group": "ankle",
+    "focusTarget": [
+      -0.12,
+      0.04,
+      0.1
+    ],
+    "focusDistance": 1.8,
+    "neighbours": [
+      "calf-left",
+      "calf-right",
+      "ankle-left"
+    ],
+    "presentationIds": [
+      "ankle-sprain",
+      "achilles",
+      "plantar-heel"
+    ]
+  }
+]

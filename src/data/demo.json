@@ -1,0 +1,23 @@
+{
+  "label": "Sample recovery journey",
+  "pain": [
+    6,
+    6,
+    5,
+    5,
+    4,
+    5,
+    4,
+    4,
+    3,
+    4,
+    3,
+    3,
+    3,
+    2
+  ],
+  "sessions": 8,
+  "planned": 10,
+  "streak": 3,
+  "phase": 1
+}
