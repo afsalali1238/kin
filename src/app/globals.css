@@ -23,7 +23,7 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 .exercise-demo>span{color:#6f7a63;font-size:11px}
 .adapt-buttons>button{color:#59624e}
 .session-page .eyebrow{color:#6d7c55}
-/* ---- Per-exercise demo animations (animate only while the timer runs) ---- */
+/* ---- Per-exercise demo animations (legacy fallback) ---- */
 .moving .v-bob{animation:vBob 3s ease-in-out infinite}
 .moving .v-squat{animation:vSquat 4s ease-in-out infinite}
 .moving .v-armL{animation:vSwayL 4s ease-in-out infinite;transform-origin:245px 85px}
@@ -47,6 +47,222 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 @keyframes vBreath{50%{transform:scaleY(1.06)}}
 @keyframes vDogA{50%{transform:rotate(70deg)}}
 @keyframes vDogB{50%{transform:rotate(-25deg)}}
+
+/* ---- New per-pain exercise animation system (pain-exact) ---- */
+.exercise-demo{width:100%;display:flex;flex-direction:column;gap:12px}
+.ex-stage{position:relative;background:radial-gradient(ellipse at 50% 38%, #f7f9f2 0%, #eef3e6 55%, #e9eddf 100%);border:1px solid #dfe6d1;border-radius:14px;overflow:hidden;padding:14px 12px 10px;box-shadow:0 10px 28px -18px rgba(95,110,82,.28), 0 2px 10px -6px rgba(95,110,82,.18)}
+.ex-svg{width:100%;height:272px;display:block}
+.ex-pain-badge{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.96);border:1px solid #dbe4cc;border-radius:20px;padding:6px 10px;font-size:8.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;backdrop-filter:blur(6px);box-shadow:0 6px 14px -10px rgba(58,70,45,.25)}
+.ex-pain-dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 0 4px rgba(194,139,106,.14);animation:exPainPulse 2.2s ease-in-out infinite}
+.ex-caption{display:flex;align-items:center;gap:10px;justify-content:center;background:#f3f6ec;border:1px solid #dde6d1;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.ex-caption-text{font-size:12.5px;font-weight:600;color:#4a5a3b;letter-spacing:-.15px;line-height:1.35}
+.ex-tempo{margin-inline-start:auto;font-size:8px;letter-spacing:.9px;text-transform:uppercase;color:#8a9a7a;background:#fff;border:1px solid #e2e8d5;border-radius:20px;padding:4px 8px}
+.ex-live-dot{width:7px;height:7px;border-radius:50%;background:#8ea07a;box-shadow:0 0 0 5px rgba(142,160,122,.16);animation:exLive 1.6s ease-in-out infinite}
+.ex-rep-dots{display:flex;gap:7px;justify-content:center;margin-top:2px}
+.ex-rep-dots .ex-dot{width:7px;height:7px;border-radius:50%;background:#c8d7b4;border:1px solid #b8c7a5;opacity:.42;transition:opacity .3s, transform .3s}
+.moving .ex-rep-dots .ex-dot:nth-child(1){animation:exDot 3.6s ease-in-out infinite}
+.moving .ex-rep-dots .ex-dot:nth-child(2){animation:exDot 3.6s ease-in-out .9s infinite}
+.moving .ex-rep-dots .ex-dot:nth-child(3){animation:exDot 3.6s ease-in-out 1.8s infinite}
+.moving .ex-rep-dots .ex-dot:nth-child(4){animation:exDot 3.6s ease-in-out 2.7s infinite}
+.ex-pain-glow{animation:exGlow 2.6s ease-in-out infinite}
+.ex-guide-path{stroke-dasharray:5 6;stroke-dashoffset:0}
+.moving .ex-guide-path{animation:exDash 1.8s linear infinite}
+.ex-hold-ripple{animation:exRipple 2s ease-out infinite}
+.ex-breath-ripple{animation:exRipple 3s ease-out infinite}
+.ex-breath-halo{animation:exHalo 3.4s ease-in-out infinite}
+@keyframes exPainPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 4px rgba(194,139,106,.14)}50%{transform:scale(1.12);box-shadow:0 0 0 7px rgba(194,139,106,.08)}}
+@keyframes exLive{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.72;transform:scale(.92)}}
+@keyframes exDot{0%,100%{opacity:.42;transform:scale(1);background:#c8d7b4}12%{opacity:1;transform:scale(1.22);background:#8ea07a;border-color:#8ea07a}}
+@keyframes exGlow{0%,100%{opacity:.14}50%{opacity:.26}}
+@keyframes exDash{to{stroke-dashoffset:-22}}
+@keyframes exRipple{0%{transform:scale(.88);opacity:.34}100%{transform:scale(1.18);opacity:0}}
+@keyframes exHalo{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+/* motion pivots */
+.ex-head{transform-origin:112px 196px}
+.ex-torso{transform-origin:208px 210px}
+.ex-pelvis{transform-origin:258px 216px}
+.ex-thigh-l{transform-origin:258px 216px}
+.ex-thigh-r{transform-origin:258px 216px}
+.ex-shin-l{transform-origin:322px 204px}
+.ex-shin-r{transform-origin:322px 218px}
+.ex-head-stand{transform-origin:244px 64px}
+.ex-torso-stand{transform-origin:244px 110px}
+.ex-arm-l{transform-origin:232px 90px}
+.ex-arm-r{transform-origin:256px 90px}
+.ex-leg-l{transform-origin:234px 138px}
+.ex-leg-r{transform-origin:254px 138px}
+.ex-q-leg-l{transform-origin:292px 182px}
+.ex-q-leg-r{transform-origin:292px 182px}
+.ex-q-arm{transform-origin:218px 162px}
+.ex-open-arm{transform-origin:248px 200px}
+.ex-forearm-table{transform-origin:298px 152px}
+.ex-shin-seated{transform-origin:302px 158px}
+.ex-shin-seated-2{transform-origin:298px 168px}
+/* per-key motions — supine */
+.moving.ex-breathe-supine .ex-torso{animation:exBreatheTorso 3.6s ease-in-out infinite}
+.moving.ex-breathe-supine .ex-breath-halo{animation:exHalo 3.6s ease-in-out infinite}
+.moving.ex-rib-breathing .ex-torso{animation:exBreatheTorso 3.2s ease-in-out infinite}
+.moving.ex-pelvic-tilt .ex-pelvis{animation:exPelvic 3s ease-in-out infinite}
+.moving.ex-pelvic-tilt .ex-thigh-l,.moving.ex-pelvic-tilt .ex-thigh-r{animation:exPelvicLeg 3s ease-in-out infinite}
+.moving.ex-knee-rock .ex-legs{animation:exKneeRock 3.8s ease-in-out infinite}
+.moving.ex-hip-roll .ex-legs{animation:exKneeRock 3.8s ease-in-out infinite}
+.moving.ex-brace-supine .ex-torso{animation:exBrace 2.4s ease-in-out infinite}
+.moving.ex-heel-slide .ex-shin-l{animation:exHeelSlide 3.6s ease-in-out infinite}
+.moving.ex-heel-slide-knee .ex-shin-seated{animation:exHeelSlide 3.6s ease-in-out infinite}
+.moving.ex-bridge .ex-leg-l,.moving.ex-bridge .ex-leg-r{animation:exBridgeLegs 4s ease-in-out infinite}
+.moving.ex-bridge .ex-pelvis{animation:exBridgePelvis 4s ease-in-out infinite}
+.moving.ex-bridge-march .ex-pelvis{animation:exBridgePelvis 4s ease-in-out infinite}
+.moving.ex-bridge-march .ex-thigh-l{animation:exMarch 2s ease-in-out infinite}
+.moving.ex-hip-abduction-hold .ex-leg-l{animation:exAbductHold 3s ease-in-out infinite}
+/* prone */
+.moving.ex-prone-press .ex-torso-stand{animation:exPronePress 3.8s ease-in-out infinite;transform-origin:132px 212px}
+.moving.ex-prone-arm-lift .ex-prone-arm{animation:exProneArm 4s ease-in-out infinite}
+/* quadruped */
+.moving.ex-birddog-prep .ex-q-leg-l{animation:exDogLeg 4s ease-in-out infinite}
+.moving.ex-birddog-full .ex-q-leg-l{animation:exDogLeg 4s ease-in-out infinite}
+.moving.ex-birddog-full .ex-q-arm{animation:exDogArm 4s ease-in-out infinite}
+.moving.ex-single-bridge .ex-q-leg-l{animation:exBridgeLegs 4s ease-in-out infinite}
+/* seated */
+.moving.ex-seated-knee-extension .ex-shin-seated{animation:exKneeExt 3.2s ease-in-out infinite}
+.moving.ex-seated-knee-bend .ex-shin-seated{animation:exKneeBend 3.4s ease-in-out infinite}
+.moving.ex-seated-hip-rotation .ex-shin-seated{animation:exHipRot 3s ease-in-out infinite}
+.moving.ex-seated-heel-raise .ex-shin-seated{animation:exCalfSeated 2.4s ease-in-out infinite}
+.moving.ex-wrist-circle .ex-hand-table{animation:exWristCircle 2.8s ease-in-out infinite}
+.moving.ex-wrist-hold-extension .ex-hand-table{animation:exWristHold 2s ease-in-out infinite}
+.moving.ex-forearm-rotation .ex-hand-table{animation:exForearmRot 3s ease-in-out infinite}
+.moving.ex-thumb-slide .ex-thumb{animation:exThumb 2.2s ease-in-out infinite}
+/* standing */
+.moving.ex-hinge .ex-torso-stand{animation:exHinge 4s cubic-bezier(.6,.02,.32,1) infinite}
+.moving.ex-weighted-hinge .ex-torso-stand{animation:exHinge 4.2s cubic-bezier(.6,.02,.32,1) infinite}
+.moving.ex-hinge-hip .ex-torso-stand{animation:exHinge 4s cubic-bezier(.6,.02,.32,1) infinite}
+.moving.ex-weighted-hinge-hip .ex-torso-stand{animation:exHinge 4.2s cubic-bezier(.6,.02,.32,1) infinite}
+.moving.ex-sit-stand .ex-leg-l,.moving.ex-sit-stand .ex-leg-r{animation:exSitStandLegs 4s ease-in-out infinite}
+.moving.ex-sit-stand .ex-torso-stand{animation:exSitStandTorso 4s ease-in-out infinite}
+.moving.ex-high-sit-stand .ex-leg-l,.moving.ex-high-sit-stand .ex-leg-r{animation:exSitStandLegs 4s ease-in-out infinite}
+.moving.ex-chair-squat .ex-leg-l,.moving.ex-chair-squat .ex-leg-r{animation:exSquat 3.8s ease-in-out infinite}
+.moving.ex-chair-squat-knee .ex-leg-l,.moving.ex-chair-squat-knee .ex-leg-r{animation:exSquat 3.8s ease-in-out infinite}
+.moving.ex-mini-squat .ex-leg-l,.moving.ex-mini-squat .ex-leg-r{animation:exMiniSquat 3s ease-in-out infinite}
+.moving.ex-split-squat .ex-leg-l{animation:exSplit 3.6s ease-in-out infinite}
+.moving.ex-split-squat-hip .ex-leg-l{animation:exSplit 3.6s ease-in-out infinite}
+.moving.ex-weighted-squat .ex-leg-l,.moving.ex-weighted-squat .ex-leg-r{animation:exSquat 3.8s ease-in-out infinite}
+.moving.ex-lateral-step-up .ex-leg-l{animation:exStepUp 3.6s ease-in-out infinite}
+.moving.ex-lateral-step-down .ex-leg-l{animation:exStepDown 3.6s ease-in-out infinite}
+.moving.ex-lateral-step-down-loaded .ex-leg-l{animation:exStepDown 3.6s ease-in-out infinite}
+.moving.ex-low-step-up .ex-leg-l{animation:exStepUp 3.6s ease-in-out infinite}
+.moving.ex-step-down .ex-leg-l{animation:exStepDown 3.6s ease-in-out infinite}
+.moving.ex-hip-abduction .ex-leg-l{animation:exHipAbduct 3.2s ease-in-out infinite}
+.moving.ex-single-calf .ex-leg-l{animation:exSingleCalf 2.4s ease-in-out infinite}
+.moving.ex-double-calf .ex-leg-l,.moving.ex-double-calf .ex-leg-r{animation:exDoubleCalf 2.4s ease-in-out infinite}
+.moving.ex-seated-heel-raise .ex-leg-l{animation:exDoubleCalf 2.4s ease-in-out infinite}
+.moving.ex-quick-calf .ex-leg-l,.moving.ex-quick-calf .ex-leg-r{animation:exQuickCalf 1.4s ease-in-out infinite}
+.moving.ex-loaded-calf .ex-leg-l{animation:exDoubleCalf 2.6s ease-in-out infinite}
+.moving.ex-step-calf .ex-leg-l{animation:exStepCalf 2.6s ease-in-out infinite}
+.moving.ex-heel-lowering .ex-leg-l{animation:exHeelLower 3s ease-in-out infinite}
+.moving.ex-balance-supported .ex-leg-l{animation:exBalance 3.4s ease-in-out infinite}
+.moving.ex-balance-reach .ex-arm-r{animation:exBalanceReach 3.4s ease-in-out infinite}
+.moving.ex-ankle-pump .ex-leg-l{animation:exAnklePump 2.2s ease-in-out infinite}
+.moving.ex-ankle-circle .ex-leg-l{animation:exAnkleCircle 3s ease-in-out infinite}
+.moving.ex-band-eversion .ex-leg-l{animation:exEversion 2.8s ease-in-out infinite}
+.moving.ex-neck-turn .ex-head-stand{animation:exNeckTurn 3.4s ease-in-out infinite}
+.moving.ex-chin-nod .ex-head-stand{animation:exChinNod 3s ease-in-out infinite}
+.moving.ex-chin-tuck .ex-head-stand{animation:exChinTuck 3.2s ease-in-out infinite}
+.moving.ex-chin-tuck-standing .ex-head-stand{animation:exChinTuck 3.2s ease-in-out infinite}
+.moving.ex-neck-rotate-full .ex-head-stand{animation:exNeckTurn 3s ease-in-out infinite}
+.moving.ex-shoulder-roll .ex-arm-l,.moving.ex-shoulder-roll .ex-arm-r{animation:exShoulderRoll 3s ease-in-out infinite}
+.moving.ex-shoulder-roll-upper .ex-arm-l,.moving.ex-shoulder-roll-upper .ex-arm-r{animation:exShoulderRoll 3s ease-in-out infinite}
+.moving.ex-wall-slide .ex-arm-l,.moving.ex-wall-slide .ex-arm-r{animation:exWallSlide 3.8s ease-in-out infinite}
+.moving.ex-wall-slide-shoulder .ex-arm-r{animation:exWallSlide 3.8s ease-in-out infinite}
+.moving.ex-wall-slide-upper .ex-arm-r{animation:exWallSlide 3.8s ease-in-out infinite}
+.moving.ex-band-row .ex-arm-l,.moving.ex-band-row .ex-arm-r{animation:exBandRow 3.2s ease-in-out infinite}
+.moving.ex-band-row-shoulder .ex-arm-r{animation:exBandRow 3.2s ease-in-out infinite}
+.moving.ex-band-row-upper .ex-arm-r{animation:exBandRow 3.2s ease-in-out infinite}
+.moving.ex-band-er .ex-arm-r{animation:exBandER 3s ease-in-out infinite}
+.moving.ex-er-hold .ex-arm-r{animation:exERHold 2.6s ease-in-out infinite}
+.moving.ex-er-standing .ex-arm-r{animation:exBandER 3s ease-in-out infinite}
+.moving.ex-scap-set .ex-arm-l,.moving.ex-scap-set .ex-arm-r{animation:exScap 2.8s ease-in-out infinite}
+.moving.ex-scap-upper .ex-arm-l,.moving.ex-scap-upper .ex-arm-r{animation:exScap 2.8s ease-in-out infinite}
+.moving.ex-scaption .ex-arm-r{animation:exScaption 3.6s ease-in-out infinite}
+.moving.ex-weighted-scaption .ex-arm-r{animation:exScaption 3.8s ease-in-out infinite}
+.moving.ex-overhead-reach .ex-arm-r{animation:exOverhead 3.6s ease-in-out infinite}
+.moving.ex-overhead-reach-upper .ex-arm-r{animation:exOverhead 3.6s ease-in-out infinite}
+.moving.ex-overhead-press .ex-arm-r{animation:exOverhead 3.6s ease-in-out infinite}
+.moving.ex-incline-push .ex-arm-l,.moving.ex-incline-push .ex-arm-r{animation:exInclinePush 3.4s ease-in-out infinite}
+.moving.ex-wall-push .ex-arm-l,.moving.ex-wall-push .ex-arm-r{animation:exInclinePush 3.4s ease-in-out infinite}
+.moving.ex-pendulum .ex-arm-r{animation:exPendulum 2.6s ease-in-out infinite}
+.moving.ex-table-slide .ex-arm-r{animation:exTableSlide 3.4s ease-in-out infinite}
+.moving.ex-thoracic-rotation .ex-torso-stand{animation:exThoracic 4s ease-in-out infinite}
+.moving.ex-thoracic-rotation-standing .ex-torso-stand{animation:exThoracic 4s ease-in-out infinite}
+.moving.ex-thoracic-extension .ex-torso-stand{animation:exThoracicExt 3.8s ease-in-out infinite}
+.moving.ex-open-book .ex-open-arm{animation:exOpenBook 4s ease-in-out infinite}
+.moving.ex-chest-opening .ex-arm-l,.moving.ex-chest-opening .ex-arm-r{animation:exChestOpen 3.6s ease-in-out infinite}
+.moving.ex-band-pullapart .ex-arm-l,.moving.ex-band-pullapart .ex-arm-r{animation:exPullApart 3s ease-in-out infinite}
+.moving.ex-band-pullapart-upper .ex-arm-l,.moving.ex-band-pullapart-upper .ex-arm-r{animation:exPullApart 3s ease-in-out infinite}
+.moving.ex-suitcase-carry .ex-leg-l,.moving.ex-suitcase-carry .ex-leg-r{animation:exCarryWalk 2s ease-in-out infinite}
+.moving.ex-farmer-carry-elbow .ex-leg-l,.moving.ex-farmer-carry-elbow .ex-leg-r{animation:exCarryWalk 2s ease-in-out infinite}
+.moving.ex-slow-knee-extension .ex-shin-seated{animation:exKneeExt 3.6s ease-in-out infinite}
+.moving.ex-eccentric-wrist .ex-hand-table{animation:exEccentric 3.2s ease-in-out infinite}
+@keyframes exBreatheTorso{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.06)}}
+@keyframes exPelvic{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg) translateY(-2px)}}
+@keyframes exPelvicLeg{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+@keyframes exKneeRock{0%,100%{transform:rotate(0)}25%{transform:rotate(7deg)}75%{transform:rotate(-7deg)}}
+@keyframes exBrace{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+@keyframes exHeelSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(26px)}}
+@keyframes exBridgePelvis{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+@keyframes exBridgeLegs{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+@keyframes exMarch{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes exAbductHold{0%,100%{transform:rotate(0)}50%{transform:rotate(12deg)}}
+@keyframes exPronePress{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes exProneArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-18deg) translateY(-6px)}}
+@keyframes exDogLeg{0%,100%{transform:rotate(0)}50%{transform:rotate(22deg)}}
+@keyframes exDogArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
+@keyframes exKneeExt{0%,100%{transform:rotate(0)}50%{transform:rotate(-68deg)}}
+@keyframes exKneeBend{0%,100%{transform:rotate(-68deg)}50%{transform:rotate(0)}}
+@keyframes exHipRot{0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-18deg)}}
+@keyframes exCalfSeated{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
+@keyframes exWristCircle{0%{transform:rotate(0)}50%{transform:rotate(14deg) translateY(-2px)}100%{transform:rotate(0)}}
+@keyframes exWristHold{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes exForearmRot{0%,100%{transform:rotate(0)}50%{transform:rotate(42deg)}}
+@keyframes exThumb{0%,100%{transform:translateX(0)}50%{transform:translateX(5px) translateY(-2px)}}
+@keyframes exHinge{0%,100%{transform:rotate(0)}50%{transform:rotate(32deg)}}
+@keyframes exSitStandLegs{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
+@keyframes exSitStandTorso{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@keyframes exSquat{0%,100%{transform:rotate(0)}50%{transform:rotate(-28deg)}}
+@keyframes exMiniSquat{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+@keyframes exSplit{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg) translateY(4px)}}
+@keyframes exStepUp{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(-6deg)}}
+@keyframes exStepDown{0%,100%{transform:translateY(-10px) rotate(-6deg)}50%{transform:translateY(0) rotate(0)}}
+@keyframes exHipAbduct{0%,100%{transform:rotate(0)}50%{transform:rotate(16deg)}}
+@keyframes exSingleCalf{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+@keyframes exDoubleCalf{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg)}}
+@keyframes exQuickCalf{0%,100%{transform:rotate(0)}35%{transform:rotate(-18deg)}}
+@keyframes exStepCalf{0%,100%{transform:rotate(0)}50%{transform:rotate(-18deg) translateY(-2px)}}
+@keyframes exHeelLower{0%{transform:rotate(-16deg)}50%{transform:rotate(0)}100%{transform:rotate(-16deg)}}
+@keyframes exBalance{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
+@keyframes exBalanceReach{0%,100%{transform:rotate(0)}50%{transform:rotate(12deg)}}
+@keyframes exAnklePump{0%,100%{transform:rotate(0)}50%{transform:rotate(-18deg)}}
+@keyframes exAnkleCircle{0%{transform:rotate(0) translateX(0)}25%{transform:rotate(10deg) translateY(-2px)}50%{transform:rotate(0) translateX(2px)}75%{transform:rotate(-10deg)}100%{transform:rotate(0)}}
+@keyframes exEversion{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg) translateX(3px)}}
+@keyframes exNeckTurn{0%,100%{transform:rotate(0)}25%{transform:rotate(16deg)}75%{transform:rotate(-16deg)}}
+@keyframes exChinNod{0%,100%{transform:rotate(0)}50%{transform:rotate(9deg) translateY(2px)}}
+@keyframes exChinTuck{0%,100%{transform:translateX(0)}50%{transform:translateX(-7px)}}
+@keyframes exShoulderRoll{0%{transform:translateY(0) rotate(0)}25%{transform:translateY(-4px) rotate(4deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(2px) rotate(-2deg)}100%{transform:translateY(0)}}
+@keyframes exWallSlide{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+@keyframes exBandRow{0%,100%{transform:translateX(0)}50%{transform:translateX(-14px)}}
+@keyframes exBandER{0%,100%{transform:rotate(0)}50%{transform:rotate(26deg)}}
+@keyframes exERHold{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg) scale(1.02)}}
+@keyframes exScap{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes exScaption{0%,100%{transform:rotate(0)}50%{transform:rotate(-62deg)}}
+@keyframes exOverhead{0%,100%{transform:rotate(0)}50%{transform:rotate(-78deg)}}
+@keyframes exInclinePush{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes exPendulum{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(14deg)}}
+@keyframes exTableSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(22px)}}
+@keyframes exThoracic{0%,100%{transform:rotate(0)}50%{transform:rotate(16deg)}}
+@keyframes exThoracicExt{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg) translateY(-4px)}}
+@keyframes exOpenBook{0%,100%{transform:rotate(0)}50%{transform:rotate(-72deg)}}
+@keyframes exChestOpen{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+@keyframes exPullApart{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
+@keyframes exCarryWalk{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes exEccentric{0%{transform:rotate(12deg)}50%{transform:rotate(-8deg)}100%{transform:rotate(12deg)}}
 @media (max-width:720px){
  .region-search input,.custom-goal input{font-size:16px}
  input[type=range]::-webkit-slider-thumb{width:26px;height:26px}
