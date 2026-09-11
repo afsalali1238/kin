@@ -23,7 +23,7 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 .exercise-demo>span{color:#6f7a63;font-size:11px}
 .adapt-buttons>button{color:#59624e}
 .session-page .eyebrow{color:#6d7c55}
-/* ---- Per-exercise demo animations (animate only while the timer runs) ---- */
+/* ---- Per-exercise demo animations (legacy fallback) ---- */
 .moving .v-bob{animation:vBob 3s ease-in-out infinite}
 .moving .v-squat{animation:vSquat 4s ease-in-out infinite}
 .moving .v-armL{animation:vSwayL 4s ease-in-out infinite;transform-origin:245px 85px}
@@ -47,6 +47,217 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 @keyframes vBreath{50%{transform:scaleY(1.06)}}
 @keyframes vDogA{50%{transform:rotate(70deg)}}
 @keyframes vDogB{50%{transform:rotate(-25deg)}}
+
+/* ---- New per-pain exercise animation system (pain-exact) ---- */
+.exercise-demo{width:100%;display:flex;flex-direction:column;gap:12px}
+.ex-stage{position:relative;background:radial-gradient(ellipse at 50% 38%, #f7f9f2 0%, #eef3e6 55%, #e9eddf 100%);border:1px solid #dfe6d1;border-radius:14px;overflow:hidden;padding:14px 12px 10px;box-shadow:0 10px 28px -18px rgba(95,110,82,.28), 0 2px 10px -6px rgba(95,110,82,.18)}
+.ex-svg{width:100%;height:272px;display:block}
+.ex-pain-badge{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.96);border:1px solid #dbe4cc;border-radius:20px;padding:6px 10px;font-size:8.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;backdrop-filter:blur(6px);box-shadow:0 6px 14px -10px rgba(58,70,45,.25)}
+.ex-pain-dot{width:7px;height:7px;border-radius:50%;box-shadow:0 0 0 4px rgba(194,139,106,.14);animation:exPainPulse 2.2s ease-in-out infinite}
+.ex-caption{display:flex;align-items:center;gap:10px;justify-content:center;background:#f3f6ec;border:1px solid #dde6d1;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.ex-caption-text{font-size:12.5px;font-weight:600;color:#4a5a3b;letter-spacing:-.15px;line-height:1.35}
+.ex-tempo{margin-inline-start:auto;font-size:8px;letter-spacing:.9px;text-transform:uppercase;color:#8a9a7a;background:#fff;border:1px solid #e2e8d5;border-radius:20px;padding:4px 8px}
+.ex-live-dot{width:7px;height:7px;border-radius:50%;background:#8ea07a;box-shadow:0 0 0 5px rgba(142,160,122,.16);animation:exLive 1.6s ease-in-out infinite}
+.ex-rep-dots{display:flex;gap:7px;justify-content:center;margin-top:2px}
+.ex-rep-dots .ex-dot{width:7px;height:7px;border-radius:50%;background:#c8d7b4;border:1px solid #b8c7a5;opacity:.42;transition:opacity .3s, transform .3s}
+.moving .ex-rep-dots .ex-dot:nth-child(1){animation:exDot 3.6s ease-in-out infinite}
+.moving .ex-rep-dots .ex-dot:nth-child(2){animation:exDot 3.6s ease-in-out .9s infinite}
+.moving .ex-rep-dots .ex-dot:nth-child(3){animation:exDot 3.6s ease-in-out 1.8s infinite}
+.moving .ex-rep-dots .ex-dot:nth-child(4){animation:exDot 3.6s ease-in-out 2.7s infinite}
+.ex-pain-glow{animation:exGlow 2.6s ease-in-out infinite}
+.ex-guide-path{stroke-dasharray:5 6;stroke-dashoffset:0}
+.moving .ex-guide-path{animation:exDash 1.8s linear infinite}
+.ex-hold-ripple{animation:exRipple 2s ease-out infinite}
+.ex-breath-ripple{animation:exRipple 3s ease-out infinite}
+.ex-breath-halo{animation:exHalo 3.4s ease-in-out infinite}
+@keyframes exPainPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 4px rgba(194,139,106,.14)}50%{transform:scale(1.12);box-shadow:0 0 0 7px rgba(194,139,106,.08)}}
+@keyframes exLive{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.72;transform:scale(.92)}}
+@keyframes exDot{0%,100%{opacity:.42;transform:scale(1);background:#c8d7b4}12%{opacity:1;transform:scale(1.22);background:#8ea07a;border-color:#8ea07a}}
+@keyframes exGlow{0%,100%{opacity:.14}50%{opacity:.26}}
+@keyframes exDash{to{stroke-dashoffset:-22}}
+@keyframes exRipple{0%{transform:scale(.88);opacity:.34}100%{transform:scale(1.18);opacity:0}}
+@keyframes exHalo{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+/* motion pivots */
+.ex-head{transform-origin:112px 196px}
+.ex-torso{transform-origin:208px 210px}
+.ex-pelvis{transform-origin:258px 216px}
+.ex-thigh-l{transform-origin:258px 216px}
+.ex-thigh-r{transform-origin:258px 216px}
+.ex-shin-l{transform-origin:322px 204px}
+.ex-shin-r{transform-origin:322px 218px}
+.ex-head-stand{transform-origin:244px 64px}
+.ex-torso-stand{transform-origin:244px 110px}
+.ex-arm-l{transform-origin:232px 90px}
+.ex-arm-r{transform-origin:256px 90px}
+.ex-leg-l{transform-origin:234px 138px}
+.ex-leg-r{transform-origin:254px 138px}
+.ex-q-leg-l{transform-origin:292px 182px}
+.ex-q-leg-r{transform-origin:292px 182px}
+.ex-q-arm{transform-origin:218px 162px}
+.ex-open-arm{transform-origin:248px 200px}
+.ex-forearm-table{transform-origin:298px 152px}
+.ex-shin-seated{transform-origin:302px 158px}
+.ex-shin-seated-2{transform-origin:298px 168px}
+/* per-key motions — supine (unique timing per exercise via --ex-dur / --ex-angle) */
+.moving.ex-breathe-supine .ex-torso,.moving.ex-breathe-supine-supported .ex-torso{animation:exBreatheTorso var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-breathe-supine .ex-breath-halo,.moving.ex-breathe-supine-supported .ex-breath-halo{animation:exHalo var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-rib-breathing .ex-torso,.moving.ex-rib-breathing-supported .ex-torso{animation:exBreatheTorso var(--ex-dur,3.2s) ease-in-out infinite}
+.moving.ex-pelvic-tilt .ex-pelvis{animation:exPelvic var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-pelvic-tilt .ex-thigh-l,.moving.ex-pelvic-tilt .ex-thigh-r{animation:exPelvicLeg var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-knee-rock .ex-legs,.moving.ex-hip-roll .ex-legs{animation:exKneeRock var(--ex-dur,3.8s) ease-in-out infinite}
+.moving.ex-brace-supine .ex-torso{animation:exBrace var(--ex-dur,2.4s) ease-in-out infinite}
+.moving.ex-heel-slide .ex-shin-l{animation:exHeelSlide var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-heel-slide-knee .ex-shin-seated{animation:exHeelSlide var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-bridge .ex-leg-l,.moving.ex-bridge .ex-leg-r,.moving.ex-bridge-hip .ex-leg-l,.moving.ex-bridge-hip .ex-leg-r{animation:exBridgeLegs var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-bridge .ex-pelvis,.moving.ex-bridge-hip .ex-pelvis{animation:exBridgePelvis var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-bridge-march .ex-pelvis{animation:exBridgePelvis var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-bridge-march .ex-thigh-l{animation:exMarch var(--ex-dur,2s) ease-in-out infinite}
+.moving.ex-hip-abduction-hold .ex-leg-l{animation:exAbductHold var(--ex-dur,3s) ease-in-out infinite}
+/* prone */
+.moving.ex-prone-press .ex-torso-stand{animation:exPronePress var(--ex-dur,3.8s) ease-in-out infinite;transform-origin:132px 212px}
+.moving.ex-prone-arm-lift .ex-prone-arm{animation:exProneArm var(--ex-dur,4s) ease-in-out infinite}
+/* quadruped */
+.moving.ex-birddog-prep .ex-q-leg-l{animation:exDogLeg var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-birddog-full .ex-q-leg-l{animation:exDogLeg var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-birddog-full .ex-q-arm{animation:exDogArm var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-single-bridge .ex-q-leg-l{animation:exBridgeLegs var(--ex-dur,4s) ease-in-out infinite}
+/* seated */
+.moving.ex-seated-knee-extension .ex-shin-seated{animation:exKneeExt var(--ex-dur,3.2s) ease-in-out infinite}
+.moving.ex-seated-knee-bend .ex-shin-seated{animation:exKneeBend var(--ex-dur,3.4s) ease-in-out infinite}
+.moving.ex-seated-hip-rotation .ex-shin-seated{animation:exHipRot var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-seated-heel-raise .ex-shin-seated{animation:exCalfSeated var(--ex-dur,2.4s) ease-in-out infinite}
+.moving.ex-wrist-circle .ex-hand-table,.moving.ex-wrist-rest-supported .ex-hand-table{animation:exWristCircle var(--ex-dur,2.8s) ease-in-out infinite}
+.moving.ex-wrist-hold-extension .ex-hand-table{animation:exWristHold var(--ex-dur,2s) ease-in-out infinite}
+.moving.ex-forearm-rotation .ex-hand-table{animation:exForearmRot var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-thumb-slide .ex-thumb{animation:exThumb var(--ex-dur,2.2s) ease-in-out infinite}
+/* standing - use --ex-dur + --ex-angle for per-exercise uniqueness */
+.moving.ex-hinge .ex-torso-stand,.moving.ex-weighted-hinge .ex-torso-stand,.moving.ex-hinge-hip .ex-torso-stand,.moving.ex-weighted-hinge-hip .ex-torso-stand{animation:exHinge var(--ex-dur,4s) cubic-bezier(.6,.02,.32,1) infinite}
+.moving.ex-sit-stand .ex-leg-l,.moving.ex-sit-stand .ex-leg-r{animation:exSitStandLegs var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-sit-stand .ex-torso-stand{animation:exSitStandTorso var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-high-sit-stand .ex-leg-l,.moving.ex-high-sit-stand .ex-leg-r,.moving.ex-high-chair-hip .ex-leg-l,.moving.ex-high-chair-hip .ex-leg-r{animation:exSitStandLegs var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-chair-squat .ex-leg-l,.moving.ex-chair-squat .ex-leg-r,.moving.ex-chair-squat-knee .ex-leg-l,.moving.ex-chair-squat-knee .ex-leg-r{animation:exSquat var(--ex-dur,3.8s) ease-in-out infinite}
+.moving.ex-mini-squat .ex-leg-l,.moving.ex-mini-squat .ex-leg-r{animation:exMiniSquat var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-split-squat .ex-leg-l,.moving.ex-split-squat-hip .ex-leg-l{animation:exSplit var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-weighted-squat .ex-leg-l,.moving.ex-weighted-squat .ex-leg-r{animation:exSquat var(--ex-dur,3.8s) ease-in-out infinite}
+.moving.ex-lateral-step-up .ex-leg-l{animation:exStepUp var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-lateral-step-down .ex-leg-l,.moving.ex-lateral-step-down-loaded .ex-leg-l{animation:exStepDown var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-low-step-up .ex-leg-l,.moving.ex-low-step-hip .ex-leg-l{animation:exStepUp var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-step-down .ex-leg-l{animation:exStepDown var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-hip-abduction .ex-leg-l{animation:exHipAbduct var(--ex-dur,3.2s) ease-in-out infinite}
+.moving.ex-single-calf .ex-leg-l{animation:exSingleCalf var(--ex-dur,2.4s) ease-in-out infinite}
+.moving.ex-double-calf .ex-leg-l,.moving.ex-double-calf .ex-leg-r{animation:exDoubleCalf var(--ex-dur,2.4s) ease-in-out infinite}
+.moving.ex-seated-heel-raise .ex-leg-l{animation:exDoubleCalf var(--ex-dur,2.4s) ease-in-out infinite}
+.moving.ex-quick-calf .ex-leg-l,.moving.ex-quick-calf .ex-leg-r,.moving.ex-quick-calf-loaded .ex-leg-l,.moving.ex-quick-calf-loaded .ex-leg-r{animation:exQuickCalf var(--ex-dur,1.4s) ease-in-out infinite}
+.moving.ex-loaded-calf .ex-leg-l{animation:exDoubleCalf var(--ex-dur,2.6s) ease-in-out infinite}
+.moving.ex-step-calf .ex-leg-l{animation:exStepCalf var(--ex-dur,2.6s) ease-in-out infinite}
+.moving.ex-heel-lowering .ex-leg-l{animation:exHeelLower var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-balance-supported .ex-leg-l{animation:exBalance var(--ex-dur,3.4s) ease-in-out infinite}
+.moving.ex-balance-reach .ex-arm-r{animation:exBalanceReach var(--ex-dur,3.4s) ease-in-out infinite}
+.moving.ex-ankle-pump .ex-leg-l{animation:exAnklePump var(--ex-dur,2.2s) ease-in-out infinite}
+.moving.ex-ankle-circle .ex-leg-l{animation:exAnkleCircle var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-band-eversion .ex-leg-l{animation:exEversion var(--ex-dur,2.8s) ease-in-out infinite}
+.moving.ex-neck-turn .ex-head-stand{animation:exNeckTurn var(--ex-dur,3.4s) ease-in-out infinite}
+.moving.ex-chin-nod .ex-head-stand{animation:exChinNod var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-chin-tuck .ex-head-stand,.moving.ex-chin-tuck-standing .ex-head-stand{animation:exChinTuck var(--ex-dur,3.2s) ease-in-out infinite}
+.moving.ex-neck-rotate-full .ex-head-stand{animation:exNeckTurn var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-neck-rest .ex-head-stand,.moving.ex-neck-rest-supported .ex-head-stand{animation:exNeckTurn var(--ex-dur,4s) ease-in-out infinite; opacity:0.45}
+.moving.ex-shoulder-roll .ex-arm-l,.moving.ex-shoulder-roll .ex-arm-r,.moving.ex-shoulder-roll-upper .ex-arm-l,.moving.ex-shoulder-roll-upper .ex-arm-r{animation:exShoulderRoll var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-wall-slide .ex-arm-l,.moving.ex-wall-slide .ex-arm-r,.moving.ex-wall-slide-shoulder .ex-arm-r,.moving.ex-wall-slide-upper .ex-arm-r{animation:exWallSlide var(--ex-dur,3.8s) ease-in-out infinite}
+.moving.ex-band-row .ex-arm-l,.moving.ex-band-row .ex-arm-r,.moving.ex-band-row-shoulder .ex-arm-r,.moving.ex-band-row-upper .ex-arm-r{animation:exBandRow var(--ex-dur,3.2s) ease-in-out infinite}
+.moving.ex-band-er .ex-arm-r,.moving.ex-er-standing .ex-arm-r{animation:exBandER var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-er-hold .ex-arm-r{animation:exERHold var(--ex-dur,2.6s) ease-in-out infinite}
+.moving.ex-scap-set .ex-arm-l,.moving.ex-scap-set .ex-arm-r,.moving.ex-scap-upper .ex-arm-l,.moving.ex-scap-upper .ex-arm-r{animation:exScap var(--ex-dur,2.8s) ease-in-out infinite}
+.moving.ex-scaption .ex-arm-r,.moving.ex-weighted-scaption .ex-arm-r{animation:exScaption var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-overhead-reach .ex-arm-r,.moving.ex-overhead-reach-upper .ex-arm-r,.moving.ex-overhead-reach-loaded .ex-arm-r,.moving.ex-overhead-reach-upper-loaded .ex-arm-r{animation:exOverhead var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-overhead-press .ex-arm-r,.moving.ex-overhead-press-loaded .ex-arm-r{animation:exOverhead var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-incline-push .ex-arm-l,.moving.ex-incline-push .ex-arm-r,.moving.ex-wall-push .ex-arm-l,.moving.ex-wall-push .ex-arm-r,.moving.ex-incline-push-shoulder .ex-arm-l,.moving.ex-incline-push-shoulder .ex-arm-r{animation:exInclinePush var(--ex-dur,3.4s) ease-in-out infinite}
+.moving.ex-pendulum .ex-arm-r{animation:exPendulum var(--ex-dur,2.6s) ease-in-out infinite}
+.moving.ex-table-slide .ex-arm-r{animation:exTableSlide var(--ex-dur,3.4s) ease-in-out infinite}
+.moving.ex-thoracic-rotation .ex-torso-stand,.moving.ex-thoracic-rotation-standing .ex-torso-stand{animation:exThoracic var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-thoracic-extension .ex-torso-stand{animation:exThoracicExt var(--ex-dur,3.8s) ease-in-out infinite}
+.moving.ex-open-book .ex-open-arm{animation:exOpenBook var(--ex-dur,4s) ease-in-out infinite}
+.moving.ex-chest-opening .ex-arm-l,.moving.ex-chest-opening .ex-arm-r{animation:exChestOpen var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-band-pullapart .ex-arm-l,.moving.ex-band-pullapart .ex-arm-r,.moving.ex-band-pullapart-upper .ex-arm-l,.moving.ex-band-pullapart-upper .ex-arm-r{animation:exPullApart var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-suitcase-carry .ex-leg-l,.moving.ex-suitcase-carry .ex-leg-r,.moving.ex-suitcase-carry-loaded .ex-leg-l,.moving.ex-suitcase-carry-loaded .ex-leg-r{animation:exCarryWalk var(--ex-dur,2s) ease-in-out infinite}
+.moving.ex-farmer-carry-elbow .ex-leg-l,.moving.ex-farmer-carry-elbow .ex-leg-r{animation:exCarryWalk var(--ex-dur,2s) ease-in-out infinite}
+.moving.ex-slow-knee-extension .ex-shin-seated{animation:exKneeExt var(--ex-dur,3.6s) ease-in-out infinite}
+.moving.ex-eccentric-wrist .ex-hand-table{animation:exEccentric var(--ex-dur,3.2s) ease-in-out infinite}
+.moving.ex-knee-rest .ex-leg-l,.moving.ex-knee-rest-supported .ex-leg-l{animation:exBalance var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-hip-rest .ex-leg-l,.moving.ex-hip-rest-supported .ex-leg-l{animation:exKneeRock var(--ex-dur,3.8s) ease-in-out infinite}
+.moving.ex-ankle-rest .ex-leg-l,.moving.ex-ankle-rest-supported .ex-leg-l{animation:exAnklePump var(--ex-dur,3s) ease-in-out infinite}
+.moving.ex-wrist-rest .ex-hand-table,.moving.ex-wrist-rest-supported .ex-hand-table{animation:exWristHold var(--ex-dur,2.4s) ease-in-out infinite}
+.moving.ex-shoulder-rest .ex-arm-r,.moving.ex-shoulder-rest-supported .ex-arm-r{animation:exShoulderRoll var(--ex-dur,3.5s) ease-in-out infinite}
+
+@keyframes exBreatheTorso{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.06)}}
+@keyframes exPelvic{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -6deg))) translateY(-2px)}}
+@keyframes exPelvicLeg{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -4deg) * 0.66))}}
+@keyframes exKneeRock{0%,100%{transform:rotate(0)}25%{transform:rotate(calc(var(--ex-angle, 7deg)))}75%{transform:rotate(calc(var(--ex-angle, -7deg)))}}
+@keyframes exBrace{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+@keyframes exHeelSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(var(--ex-trans, 26px))}}
+@keyframes exBridgePelvis{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(var(--ex-trans, -18px)))}}
+@keyframes exBridgeLegs{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -10deg)))}}
+@keyframes exMarch{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(var(--ex-trans, -14px)))}}
+@keyframes exAbductHold{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 12deg))}}
+@keyframes exPronePress{0%,100%{transform:translateY(0)}50%{transform:translateY(var(--ex-trans, -14px))}}
+@keyframes exProneArm{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -18deg))) translateY(-6px)}}
+@keyframes exDogLeg{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 22deg))}}
+@keyframes exDogArm{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -22deg)))}}
+@keyframes exKneeExt{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -68deg)))}}
+@keyframes exKneeBend{0%,100%{transform:rotate(calc(var(--ex-angle, -68deg)))}50%{transform:rotate(0)}}
+@keyframes exHipRot{0%,100%{transform:rotate(0)}25%{transform:rotate(var(--ex-angle, 18deg))}75%{transform:rotate(calc(var(--ex-angle, -18deg)))}}
+@keyframes exCalfSeated{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -22deg))}}
+@keyframes exWristCircle{0%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 14deg)) translateY(-2px)}100%{transform:rotate(0)}}
+@keyframes exWristHold{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes exForearmRot{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 42deg))}}
+@keyframes exThumb{0%,100%{transform:translateX(0)}50%{transform:translateX(5px) translateY(-2px)}}
+@keyframes exHinge{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 32deg))}}
+@keyframes exSitStandLegs{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -22deg)))}}
+@keyframes exSitStandTorso{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@keyframes exSquat{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -28deg))}}
+@keyframes exMiniSquat{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -14deg))}}
+@keyframes exSplit{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -16deg)) translateY(4px)}}
+@keyframes exStepUp{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(calc(var(--ex-angle, -6deg)))}}
+@keyframes exStepDown{0%,100%{transform:translateY(-10px) rotate(calc(var(--ex-angle, -6deg)))}50%{transform:translateY(0) rotate(0)}}
+@keyframes exHipAbduct{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 16deg))}}
+@keyframes exSingleCalf{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -14deg))}}
+@keyframes exDoubleCalf{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -16deg))}}
+@keyframes exQuickCalf{0%,100%{transform:rotate(0)}35%{transform:rotate(var(--ex-angle, -18deg))}}
+@keyframes exStepCalf{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -18deg)) translateY(-2px)}}
+@keyframes exHeelLower{0%{transform:rotate(var(--ex-angle, -16deg))}50%{transform:rotate(0)}100%{transform:rotate(var(--ex-angle, -16deg))}}
+@keyframes exBalance{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 3deg))}}
+@keyframes exBalanceReach{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 12deg))}}
+@keyframes exAnklePump{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, -18deg))}}
+@keyframes exAnkleCircle{0%{transform:rotate(0) translateX(0)}25%{transform:rotate(10deg) translateY(-2px)}50%{transform:rotate(0) translateX(2px)}75%{transform:rotate(-10deg)}100%{transform:rotate(0)}}
+@keyframes exEversion{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg) translateX(3px)}}
+@keyframes exNeckTurn{0%,100%{transform:rotate(0)}25%{transform:rotate(var(--ex-angle, 16deg))}75%{transform:rotate(calc(var(--ex-angle, -16deg)))}}
+@keyframes exChinNod{0%,100%{transform:rotate(0)}50%{transform:rotate(9deg) translateY(2px)}}
+@keyframes exChinTuck{0%,100%{transform:translateX(0)}50%{transform:translateX(-7px)}}
+@keyframes exShoulderRoll{0%{transform:translateY(0) rotate(0)}25%{transform:translateY(-4px) rotate(4deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(2px) rotate(-2deg)}100%{transform:translateY(0)}}
+@keyframes exWallSlide{0%,100%{transform:translateY(0)}50%{transform:translateY(var(--ex-trans, -18px))}}
+@keyframes exBandRow{0%,100%{transform:translateX(0)}50%{transform:translateX(calc(var(--ex-trans, -14px)))}}
+@keyframes exBandER{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 26deg))}}
+@keyframes exERHold{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg) scale(1.02)}}
+@keyframes exScap{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes exScaption{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -62deg)))}}
+@keyframes exOverhead{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -78deg)))}}
+@keyframes exInclinePush{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes exPendulum{0%,100%{transform:rotate(calc(var(--ex-angle, -12deg)))}50%{transform:rotate(calc(var(--ex-angle, 14deg)))}}
+@keyframes exTableSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(var(--ex-trans, 22px))}}
+@keyframes exThoracic{0%,100%{transform:rotate(0)}50%{transform:rotate(var(--ex-angle, 16deg))}}
+@keyframes exThoracicExt{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -10deg))) translateY(-4px)}}
+@keyframes exOpenBook{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -72deg)))}}
+@keyframes exChestOpen{0%,100%{transform:rotate(0)}50%{transform:rotate(calc(var(--ex-angle, -14deg)))}}
+@keyframes exPullApart{0%,100%{transform:translateX(0)}50%{transform:translateX(var(--ex-trans, 14px))}}
+@keyframes exCarryWalk{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes exEccentric{0%{transform:rotate(12deg)}50%{transform:rotate(-8deg)}100%{transform:rotate(12deg)}}
+
+
+.ex-id-badge{position:absolute;bottom:10px;right:12px;font-size:6px;letter-spacing:.8px;color:#9aa78c;background:rgba(255,255,255,.92);border:1px solid #dde6d1;border-radius:10px;padding:3px 6px;opacity:.0}
+.moving .ex-id-badge{opacity:.42}
+.ex-variant-tag{margin-inline-start:6px;font-size:7px;background:#fff;border:1px solid currentColor;border-radius:10px;padding:2px 5px;opacity:.9}
+.is-supported{--ex-dur: 4.2s}
+.is-progressed{--ex-dur: 2.9s}
+
 @media (max-width:720px){
  .region-search input,.custom-goal input{font-size:16px}
  input[type=range]::-webkit-slider-thumb{width:26px;height:26px}
@@ -70,3 +281,97 @@ button,a,summary,[role="button"]{touch-action:manipulation}
  .page-footer{font-size:8px}
  .page-footer>span:first-child>span{font-size:9px}
 }
+
+/* ——— Body step: 3D hero + one-point sheet ——— */
+.body-workspace.body-step{display:grid;grid-template-columns:minmax(0,1fr) 360px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);min-height:612px}
+.viewer-wrap{position:relative;overflow:hidden;background:radial-gradient(ellipse 92% 74% at 50% 46%,#f2f0e8 0%,#f6f7ef 52%,#f8f9f3 100%);isolation:isolate;min-height:612px;display:flex;flex-direction:column}
+.viewer-wrap .stage-top{position:absolute;top:16px;inset-inline:18px;z-index:4}
+.viewer-search{position:absolute;top:56px;left:18px;right:18px;z-index:4;display:flex;align-items:center;gap:10px;background:rgba(252,252,248,.92);border:1px solid #e1e6d8;border-radius:999px;padding:8px 12px;backdrop-filter:saturate(1.15) blur(8px);box-shadow:0 8px 20px rgba(48,55,46,.08)}
+.viewer-search input{flex:1;border:0;background:transparent;font-size:13px;color:var(--ink);outline:none}
+.viewer-search input::placeholder{color:#9aa08f}
+.viewer-search .icon-button{width:26px;height:26px}
+.viewer-wrap .body-canvas{position:absolute;inset:92px 0 96px;z-index:1}
+.viewer-wrap .orientation-label{position:absolute;left:14px;bottom:124px;z-index:2}
+.viewer-wrap .canvas-tools{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:4}
+.viewer-wrap .view-switch{position:absolute;bottom:62px;left:50%;transform:translateX(-50%);z-index:4}
+.viewer-wrap .rotate-hint{position:absolute;bottom:18px;left:0;right:0;z-index:3}
+.map-dock{position:absolute;left:10px;right:10px;bottom:86px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;z-index:4;pointer-events:none}
+.map-dock>*{pointer-events:auto}
+.map-dock-group{display:flex;background:rgba(249,250,244,.94);border:1px solid #dde3d3;border-radius:999px;padding:3px;box-shadow:0 6px 18px rgba(48,55,46,.08);backdrop-filter:blur(8px)}
+.map-dock-group button,.map-dock-list{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:transparent;color:#8a947c;font-size:11px;font-weight:500;white-space:nowrap}
+.map-dock-group button.selected,.map-dock-list.selected{background:#e5ebd9;color:#6f7f56}
+.map-dock-list{border:1px solid #dde3d3;background:rgba(249,250,244,.94);box-shadow:0 6px 18px rgba(48,55,46,.08)}
+.map-dock .rotate{transform:rotate(180deg)}
+.bv-confirm{position:absolute;left:12px;right:12px;bottom:108px;z-index:5;background:rgba(253,253,249,.96);border:1px solid #e2e6d8;border-radius:14px;padding:14px 14px 12px;box-shadow:0 16px 32px rgba(48,55,46,.14);backdrop-filter:blur(10px)}
+.bv-confirm-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bv-confirm-head strong{font-size:13px;letter-spacing:-.2px}
+.bv-confirm-head span{font-size:11px;color:#8a907f;background:#eef1e7;border-radius:999px;padding:3px 8px;margin-inline-start:auto}
+.bv-confirm p{font-size:12px !important;line-height:1.6 !important;margin-top:6px !important}
+.bv-confirm-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bv-confirm-actions .primary-button.small,.ghost-button.small{min-height:36px;padding:10px 14px;font-size:11px;border-radius:999px}
+.ghost-button{background:#f1f3ea;color:#6b755c;border:1px solid #dde3d3}
+.ghost-button:hover{background:#e9ecdf}
+.localise-panel{border-inline-start:1px solid var(--line);background:#fdfdf9;padding:26px 22px 18px;display:flex;flex-direction:column;gap:0;overflow:auto}
+.panel-step{font-size:9px;letter-spacing:1.1px;color:var(--olive);display:flex;align-items:center;gap:8px}
+.localise-panel h2{font-size:22px;margin-top:10px}
+.localise-panel>p{font-size:12px;margin-top:8px}
+.selection-card{margin-top:16px;border:1px solid #e2e6d8;border-radius:12px;background:#fbfbf7;padding:16px}
+.selection-top{font-size:13px}
+.pin-single{margin-top:12px;border:1px solid #e6e9dd;border-radius:10px;background:#f7f8f3;padding:12px}
+.pin-single-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:8px}
+.pin-single-head b{font-size:10px;background:#e8edde;color:#6a7a56;border-radius:999px;padding:3px 8px}
+.pin-single label{font-size:10px;color:#8a8e82;display:flex;justify-content:space-between;align-items:center}
+.pin-single .slider-labels{margin-top:4px}
+.pin-single-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.chip{min-height:38px;padding:8px 10px;border-radius:999px;border:1px solid #dde3d3;background:#f7f8f3;color:#66705a;font-size:11px;font-weight:500;text-align:center}
+.chip.selected{background:#e5ebd9;border-color:#cfd9bb;color:#5b684d}
+.sheet-body{max-height:320px;overflow:auto;padding-top:4px}
+.sheet-group{margin-top:14px}
+.sheet-group-label{font-size:9px;letter-spacing:1px;color:#8a8e82;text-transform:uppercase}
+.sheet-search-row{display:flex;align-items:center;gap:8px;border:1px solid #e2e6d8;border-radius:999px;padding:8px 10px;background:#fcfcf7}
+.sheet-search-row input{flex:1;border:0;background:transparent;font-size:13px;outline:none}
+.sticky-cta{position:sticky;bottom:0;background:#fdfdf9;padding-top:12px;margin-top:14px;box-shadow:0 -10px 18px -14px rgba(48,55,46,.22)}
+.region-search.sheet-body .chip-grid{margin-top:8px}
+
+@media(max-width:1100px){.body-workspace.body-step{grid-template-columns:minmax(0,1fr) 320px}}
+
+@media(max-width:720px){
+  .body-workspace.body-step{grid-template-columns:1fr;min-height:unset;border-radius:12px}
+  .viewer-wrap{min-height:62dvh;min-height:62vh;height:clamp(480px,64dvh,660px)}
+  .viewer-wrap .stage-top{top:14px;inset-inline:14px}
+  .viewer-search{top:48px;left:12px;right:12px;padding:10px 12px}
+  .viewer-search input{font-size:16px}
+  .viewer-wrap .body-canvas{inset:86px 0 92px}
+  .viewer-wrap .canvas-tools{right:12px;top:46%}
+  .viewer-wrap .view-switch{bottom:120px}
+  .viewer-wrap .rotate-hint{bottom:100px;font-size:8px;padding:0 12px;text-align:center}
+  .map-dock{bottom:124px;left:12px;right:12px;gap:6px}
+  .map-dock-group button,.map-dock-list{padding:10px 12px;font-size:11px;min-height:38px}
+  .bv-confirm{left:12px;right:12px;bottom:164px;padding:12px}
+  .localise-panel{border-top:1px solid var(--line);border-inline-start:0;border-radius:16px 16px 0 0;margin-top:-14px;z-index:5;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:52dvh;overflow:auto;box-shadow:0 -12px 24px rgba(48,55,46,.08)}
+  .localise-panel h2{font-size:20px}
+  .section-label{margin-top:18px}
+  .region-grid{grid-template-columns:repeat(2,1fr)}
+  .chip-grid{grid-template-columns:repeat(2,1fr)}
+  .sticky-cta{bottom:calc(65px + env(safe-area-inset-bottom));z-index:6}
+}
+@media(max-width:380px){
+  .viewer-wrap{height:clamp(460px,60dvh,600px)}
+  .map-dock{flex-direction:column;align-items:stretch}
+  .map-dock-group{justify-content:center}
+  .chip-grid{grid-template-columns:1fr 1fr}
+  .region-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:720px){
+  .localise-panel::before{content:'';width:36px;height:4px;background:#dde3d3;border-radius:999px;margin:0 auto 14px;display:block}
+  .body-workspace.body-step{border-radius:14px;box-shadow:0 14px 30px -18px rgba(48,55,46,.12)}
+}
+
+@media(max-width:320px){
+  .viewer-search{left:8px;right:8px}
+  .map-dock{left:8px;right:8px}
+  .bv-confirm{left:8px;right:8px}
+}
+
