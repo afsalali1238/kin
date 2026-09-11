@@ -1,7 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Printer } from 'lucide-react';
 import { defaultIntake, doseInfo, makeProgramme, regions, type Intake } from '@/lib/clinical';
+import { RECOVERY_STORAGE_KEY } from '@/lib/recovery-storage';
 
 type Recovery = { region: string; intake: Intake; goal: string; presentationId: string; phase: number; assessed: boolean };
 const initial: Recovery = { region: '', intake: defaultIntake, goal: 'Walk and move comfortably', presentationId: 'back-extension', phase: 1, assessed: false };
@@ -9,10 +11,12 @@ const initial: Recovery = { region: '', intake: defaultIntake, goal: 'Walk and m
 export default function Handout() {
  const [state, setState] = useState<Recovery>(initial);
  const [ready, setReady] = useState(false);
+ // Post-mount read is intentional: localStorage is unavailable during SSR and
+ // the printout must not flash the empty plan before hydrating.
  useEffect(() => {
   try {
-   const saved = localStorage.getItem('kinesio-recovery');
-   if (saved) setState({ ...initial, ...JSON.parse(saved) });
+   const saved = localStorage.getItem(RECOVERY_STORAGE_KEY);
+   if (saved) setState({ ...initial, ...JSON.parse(saved) }); // eslint-disable-line react-hooks/set-state-in-effect -- hydrate persisted recovery after mount
   } catch {}
   setReady(true);
  }, []);
@@ -26,7 +30,7 @@ export default function Handout() {
  return (
   <main className="handout-page">
    <div className="handout-toolbar">
-    <a className="text-button" href="/"><ArrowLeft size={16} />Back to kinē</a>
+    <Link className="text-button" href="/"><ArrowLeft size={16} />Back to kinē</Link>
     <button className="primary-button" onClick={() => window.print()}><Printer size={16} />Print my programme</button>
    </div>
 

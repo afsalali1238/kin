@@ -1,0 +1,62 @@
+import {
+  doseInfo,
+  makeProgramme,
+  match,
+  presentations,
+  progression,
+  redFlags,
+  regions,
+} from '@/lib/clinical';
+import type { Recovery } from '@/lib/app-types';
+import demo from '@/data/demo.json';
+
+/**
+ * Everything the screens need that can be computed deterministically from the
+ * persisted recovery state (plus the currently viewed phase tab and the user's
+ * rejected pattern matches). Pure: given the same inputs it returns the same
+ * outputs, so it is safe to unit test and fine to recompute on each render.
+ */
+export function deriveJourney(state: Recovery, phaseTab: number, rejected: string[]) {
+  const region = regions.find((r) => r.id === state.region);
+  const group = region?.group || 'lower-back';
+  const matches = match(group, state.intake, rejected);
+  const top = matches[0];
+  const currentPresentation = presentations.find((p) => p.id === state.presentationId) || top;
+  const flag = redFlags(state.intake, group);
+  const dose = doseInfo[state.intake.irritability];
+  const plan = makeProgramme(group, state.intake, state.presentationId, phaseTab, state.goal);
+  const progress = progression(state.logs, state.phase);
+
+  const real = state.logs.length > 0;
+  const painValues = real ? state.logs.map((l) => l.pain) : demo.pain;
+  const doneSessions = state.logs.filter((l) => l.session).length;
+
+  const uniqueDays = [...new Set(state.logs.filter((l) => l.session).map((l) => l.date.slice(0, 10)))].sort().reverse();
+  let streak = 0;
+  for (let d = 0; d < uniqueDays.length; d++) {
+    const date = new Date();
+    date.setDate(date.getDate() - d);
+    if (uniqueDays[d] === date.toISOString().slice(0, 10)) streak++;
+    else break;
+  }
+  const dailyDone = state.logs.some((l) => !l.session && l.date.slice(0, 10) === new Date().toISOString().slice(0, 10));
+
+  return {
+    region,
+    group,
+    matches,
+    top,
+    currentPresentation,
+    flag,
+    dose,
+    plan,
+    progress,
+    real,
+    painValues,
+    doneSessions,
+    streak,
+    dailyDone,
+  };
+}
+
+export type Journey = ReturnType<typeof deriveJourney>;
