@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Activity, ArrowUpRight, BookOpen, Check, ChevronDown, ChevronRight, CircleHelp,
   House, Layers3, ScanLine, UserRound, X,
@@ -35,6 +35,7 @@ const assessmentScreens: Screen[] = ['body', 'intake', 'result', 'goal'];
 
 export default function KinesioApp() {
   const [screen, setScreen] = useState<Screen>('body');
+  const scrollMemory = useRef<Partial<Record<Screen, number>>>({});
   const { state, update, answer, sync } = useRecovery((restored) => {
     if (restored.assessed) setScreen('home');
   });
@@ -96,7 +97,8 @@ export default function KinesioApp() {
     return () => clearTimeout(timer);
   }, [toast]);
   useEffect(() => {
-    window.scrollTo({ top: 0 });
+    const y = learnArticle !== null ? 0 : scrollMemory.current[screen];
+    requestAnimationFrame(() => window.scrollTo(0, y || 0));
   }, [screen, learnArticle]);
 
   useEffect(() => {
@@ -207,6 +209,7 @@ export default function KinesioApp() {
   };
   const navigate = (s: Screen) => {
     setPlaying(false);
+    scrollMemory.current[screen] = window.scrollY;
     setScreen(s);
     if (s === 'programme') setPhaseTab(state.phase);
   };
@@ -277,6 +280,7 @@ export default function KinesioApp() {
   };
   const leaveSession = () => {
     setPlaying(false);
+    scrollMemory.current.session = window.scrollY;
     setScreen('home');
   };
   const finish = () => {
