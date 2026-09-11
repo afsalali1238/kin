@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Printer } from 'lucide-react';
 import { defaultIntake, doseInfo, makeProgramme, regions, type Intake } from '@/lib/clinical';
 import { RECOVERY_STORAGE_KEY } from '@/lib/recovery-storage';
+import { figurePairSvg } from '@/lib/illustrations';
 
 type Recovery = { region: string; intake: Intake; goal: string; presentationId: string; phase: number; assessed: boolean };
 const initial: Recovery = { region: '', intake: defaultIntake, goal: 'Walk and move comfortably', presentationId: 'back-extension', phase: 1, assessed: false };
@@ -56,6 +57,7 @@ export default function Handout() {
       {e.tempo ? ` · ${e.tempo}` : ''}
       {e.equipment && e.equipment !== 'none' ? ` · ${e.equipment}` : ''}
      </p>
+     <div className="handout-figure" aria-hidden="true" dangerouslySetInnerHTML={{ __html: figurePairSvg(e) }} />
      <div className="handout-cue-row">
       {e.cues.slice(0, 3).flatMap((cue, n) => [
        ...(n ? [<ArrowRight key={'arrow' + n} size={16} />] : []),
@@ -95,6 +97,8 @@ export default function Handout() {
     .handout-exercise h2{font-size:22px;margin-top:9px;font-weight:600;color:#4c5b3f}
     .handout-dose{margin-top:9px;font-size:13px;color:var(--olive-dark)}
     .handout-cue-row{display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;align-items:center;gap:9px;margin:20px 0}
+    .handout-figure{margin:12px 0 2px}
+    .handout-figure svg{width:270px;max-width:100%;height:auto;display:block}
     .handout-cue-row svg{color:var(--olive)}
     .handout-cue-card{background:var(--pale);padding:15px;border-radius:6px;min-height:100px}
     .handout-cue-card>span{font-size:11px;color:var(--olive)}

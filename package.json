@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "check:illustrations": "node --experimental-strip-types scripts/illustration-check.mjs",
     "test:watch": "vitest"
   },
   "dependencies": {

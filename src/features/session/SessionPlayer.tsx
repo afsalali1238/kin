@@ -4,7 +4,8 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Clock3, Pause, Play, RotateCcw, Vo
 import type { Exercise } from '@/lib/clinical';
 import type { T } from '@/lib/app-types';
 import LazyBodyViewer from '@/components/body/LazyBodyViewer';
-import ExerciseAnimation from '@/components/exercise/ExerciseAnimation';
+import ExerciseFigure from '@/components/ExerciseFigure';
+import { captionFor } from '@/lib/exercise-captions';
 import IconButton from '@/components/ui/IconButton';
 
 export type SessionPlayerProps = {
@@ -32,6 +33,7 @@ export default function SessionPlayer({
 }: SessionPlayerProps) {
   const activeExercise = list[index];
   const touchStart = useRef(0);
+  const touchY = useRef(0);
   if (!activeExercise) return null;
   return (
     <div className="session-page">
@@ -43,15 +45,25 @@ export default function SessionPlayer({
       <div className="session-progress">{list.map((e, i) => <i key={e.id + i} className={i <= index ? 'complete' : ''} />)}</div>
       <div
         className="session-player"
-        onTouchStart={(e) => { touchStart.current = e.touches[0].clientX; }}
+        onTouchStart={(e) => {
+          touchStart.current = e.touches[0].clientX;
+          touchY.current = e.touches[0].clientY;
+        }}
         onTouchEnd={(e) => {
-          const d = touchStart.current - e.changedTouches[0].clientX;
-          if (d > 70) onNext();
-          else if (d < -70) onPrev();
+          const dx = touchStart.current - e.changedTouches[0].clientX;
+          const dy = touchY.current - e.changedTouches[0].clientY;
+          // ignore taps, gentle drift and — above all — vertical scrolling
+          if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
+          // swipe direction flips with the reading direction
+          const forward = arabic ? dx < 0 : dx > 0;
+          if (forward) onNext();
+          else onPrev();
         }}
       >
         <div className="session-visual">
-          <ExerciseAnimation exercise={activeExercise} playing={playing} arabic={arabic} />
+          <div className="figure-swap" key={activeExercise.id}>
+            <ExerciseFigure exercise={activeExercise} playing={playing} caption={captionFor(activeExercise, arabic)} />
+          </div>
           <div className="target-mini">
             <div dir="ltr">
               <LazyBodyViewer active={activeExercise.targetRegions[0]} back={group === 'lower-back' || group === 'upper-back'} mini />
