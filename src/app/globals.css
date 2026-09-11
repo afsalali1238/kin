@@ -324,7 +324,7 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 .pin-single .slider-labels{margin-top:4px}
 .pin-single-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .chip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
-.chip{min-height:38px;padding:8px 10px;border-radius:999px;border:1px solid #dde3d3;background:#f7f8f3;color:#66705a;font-size:11px;font-weight:500;text-align:center}
+.chip{min-height:44px;padding:8px 10px;border-radius:999px;border:1px solid #dde3d3;background:#f7f8f3;color:#66705a;font-size:11px;font-weight:500;text-align:center}
 .chip.selected{background:#e5ebd9;border-color:#cfd9bb;color:#5b684d}
 .sheet-body{max-height:320px;overflow:auto;padding-top:4px}
 .sheet-group{margin-top:14px}

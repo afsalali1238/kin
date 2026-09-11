@@ -20,6 +20,7 @@ function Model({sex='male',active='',onSelect=()=>{},pins=[],dragging=false}:Bod
  const material=useMemo(()=>skinMaterial(map,normal,mask,activeColor),[map,normal,mask,activeColor]);
  const {invalidate}=useThree();
  useEffect(()=>{if(dragging||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const timer=setInterval(()=>{if(!document.hidden)invalidate();},1000/24);return()=>clearInterval(timer);},[dragging,invalidate]);
+ // eslint-disable-next-line react-hooks/immutability -- writing to a three.js shader uniform inside the r3f frame loop is the documented imperative pattern
  useFrame(({clock})=>{if(material.userData.shader&&!dragging)material.userData.shader.uniforms.breathTime.value=clock.elapsedTime;});
  const object=useMemo(()=>{const copy=scene.clone(true);copy.traverse(o=>{if(o instanceof THREE.Mesh){o.material=material;o.castShadow=true;o.receiveShadow=true;}});return copy;},[scene,material]);
  useEffect(()=>()=>{material.dispose();document.body.style.cursor='auto';},[material]);
@@ -28,10 +29,12 @@ function Model({sex='male',active='',onSelect=()=>{},pins=[],dragging=false}:Bod
 }
 class Boundary extends Component<{children:ReactNode;fallback:ReactNode},{failed:boolean}>{state={failed:false};static getDerivedStateFromError(){return {failed:true};}render(){return this.state.failed?this.props.fallback:this.props.children;}}
 export default function BodyViewer(props:BodyViewerProps){
- const [supported,setSupported]=useState<boolean|null>(null);const [dragging,setDragging]=useState(false);
- useEffect(()=>{const c=document.createElement('canvas');const gl=c.getContext('webgl2');setSupported(!!gl);gl?.getExtension('WEBGL_lose_context')?.loseContext();},[]);
+ // BodyViewer is only ever mounted client-side (ssr:false via LazyBodyViewer),
+ // so the WebGL2 capability check can run in a lazy initializer — no effect,
+ // no loading flash.
+ const [supported]=useState<boolean>(()=>{if(typeof document==='undefined')return false;const c=document.createElement('canvas');const gl=c.getContext('webgl2');if(!gl)return false;gl.getExtension('WEBGL_lose_context')?.loseContext();return true;});
+ const [dragging,setDragging]=useState(false);
  const fallback=<Fallback2D active={props.active||''} onSelect={props.onSelect||(()=>{})} back={!!props.back}/>;
- if(supported===false)return fallback;
- if(supported===null)return <div className="body-loading">Preparing your body map…</div>;
- return <Boundary fallback={fallback}><Canvas frameloop="demand" dpr={[1,1.75]} shadows camera={{position:[0,.96,3.45],fov:35}} gl={{antialias:true,alpha:true,toneMapping:THREE.ACESFilmicToneMapping,toneMappingExposure:1.05}} style={{touchAction:'none'}}><ambientLight intensity={.55}/><hemisphereLight args={['#fff7ed','#8b8b71',.9]}/><directionalLight position={[-3,5,4]} intensity={2.1} color="#ffebda" castShadow shadow-mapSize={[1024,1024]}/><directionalLight position={[3,2,2]} intensity={.6} color="#dae6f0"/><directionalLight position={[1,3,-3]} intensity={1.8} color="#ffeedc"/><Suspense fallback={<Loader/>}><Model {...props} dragging={dragging}/><ContactShadows position={[0,-.015,0]} opacity={.25} scale={3} blur={2.8} far={2} resolution={256}/></Suspense><CameraRig back={!!props.back} zoom={props.zoom||1} reset={props.reset||0} active={props.active} mini={props.mini} onDrag={setDragging}/><Quality dragging={dragging}/></Canvas></Boundary>;
+ if(!supported)return fallback;
+ return <Boundary fallback={fallback}><Canvas role={props.mini?'presentation':'img'} aria-hidden={props.mini||undefined} aria-label={props.mini?undefined:'Interactive 3D body map. Drag to rotate, scroll to zoom, and tap the exact spot of your pain.'} frameloop="demand" dpr={[1,1.75]} shadows camera={{position:[0,.96,3.45],fov:35}} gl={{antialias:true,alpha:true,toneMapping:THREE.ACESFilmicToneMapping,toneMappingExposure:1.05}} style={{touchAction:'none'}}><ambientLight intensity={.55}/><hemisphereLight args={['#fff7ed','#8b8b71',.9]}/><directionalLight position={[-3,5,4]} intensity={2.1} color="#ffebda" castShadow shadow-mapSize={[1024,1024]}/><directionalLight position={[3,2,2]} intensity={.6} color="#dae6f0"/><directionalLight position={[1,3,-3]} intensity={1.8} color="#ffeedc"/><Suspense fallback={<Loader/>}><Model {...props} dragging={dragging}/><ContactShadows position={[0,-.015,0]} opacity={.25} scale={3} blur={2.8} far={2} resolution={256}/></Suspense><CameraRig back={!!props.back} zoom={props.zoom||1} reset={props.reset||0} active={props.active} mini={props.mini} onDrag={setDragging}/><Quality dragging={dragging}/></Canvas></Boundary>;
 }

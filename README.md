@@ -11,7 +11,7 @@ Built with **Next.js 16 (App Router)**, **React 19**, **Three.js / React Three F
 - **Interactive 3D Anatomical Body Map**:
   - Realistic male & female 3D anatomical models loaded via GLTF/GLB with Three.js / React Three Fiber.
   - Interactive region selection with 31 coarse body regions.
-  - Precise 5-point pain-pinning with individual NPRS severity sliders (0–10).
+  - Precise single-point pain-pinning (place → confirm) with an NPRS severity slider (0–10).
   - Orbit rotation, zoom, anterior/posterior switching, and fallback 2D viewer.
 - **7-Step Clinical Assessment**:
   - Contextual triage covering onset, symptom duration, diurnal patterns, aggravators/easers, irritability, and neurological screening.
