@@ -13,9 +13,20 @@ import { checkRecoveryRateLimit } from '@/lib/rate-limit';
  * localStorage as its source of truth either way.
  */
 function clientKey(req: NextRequest, id: string): string {
-  const forwarded = req.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0].trim() : 'unknown';
-  return `${ip}:${id}`;
+  const realIp = req.headers.get('x-real-ip') || req.headers.get('cf-connecting-ip');
+  let ip = realIp ? realIp.trim() : '';
+
+  if (!ip) {
+    const forwarded = req.headers.get('x-forwarded-for');
+    if (forwarded) {
+      const parts = forwarded.split(',').map((p) => p.trim()).filter(Boolean);
+      ip = parts.length > 0 ? parts[parts.length - 1] : '';
+    }
+  }
+
+  const isIp = /^([0-9]{1,3}\.){3}[0-9]{1,3}$|^[a-fA-F0-9:]+$/.test(ip);
+  const safeIp = isIp ? ip : 'unknown';
+  return `${safeIp}:${id}`;
 }
 
 export async function GET(req: NextRequest) {

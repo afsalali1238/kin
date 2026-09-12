@@ -5,12 +5,13 @@
 // Run: node scripts/asset-check.mjs   (exits non-zero on any failure)
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import zlib from 'zlib';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 globalThis.self = globalThis; // GLTFLoader expects a browser-like global
-const root = process.env.ASSET_ROOT || path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = process.env.ASSET_ROOT || path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = p => fs.readFileSync(path.join(root, p));
 
 let failures = 0;

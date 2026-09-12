@@ -8,9 +8,25 @@
  */
 type Bucket = { count: number; resetAt: number };
 
-export function createRateLimiter({ limit, windowMs }: { limit: number; windowMs: number }) {
+export function createRateLimiter({ limit, windowMs, maxBuckets = 5000 }: { limit: number; windowMs: number; maxBuckets?: number }) {
   const buckets = new Map<string, Bucket>();
   return (key: string, now: number = Date.now()): boolean => {
+    // Evict expired entries when capacity threshold is reached
+    if (buckets.size >= maxBuckets) {
+      for (const [k, b] of buckets) {
+        if (now >= b.resetAt) {
+          buckets.delete(k);
+        }
+      }
+      // Hard clamp if still at capacity (e.g. under active multi-key burst attack)
+      if (buckets.size >= maxBuckets) {
+        for (const [k] of buckets) {
+          buckets.delete(k);
+          if (buckets.size < maxBuckets * 0.8) break;
+        }
+      }
+    }
+
     const bucket = buckets.get(key);
     if (!bucket || now >= bucket.resetAt) {
       buckets.set(key, { count: 1, resetAt: now + windowMs });

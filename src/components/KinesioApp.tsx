@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import {
   Activity, ArrowUpRight, BookOpen, Check, ChevronDown, ChevronRight, CircleHelp,
-  House, Layers3, ScanLine, UserRound, X,
+  House, Layers3, ScanLine, UserRound, WifiOff, X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { exercises, makeProgramme, regions, variant, type CheckIn, type Exercise } from '@/lib/clinical';
@@ -10,6 +11,7 @@ import type { Screen } from '@/lib/app-types';
 import { deriveJourney } from '@/lib/derive';
 import { makeId } from '@/lib/id';
 import { useRecovery } from '@/hooks/useRecovery';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import type { PainPin } from '@/components/body/BodyViewer';
 import BodyStep from '@/features/journey/BodyStep';
 import IntakeStep from '@/features/journey/IntakeStep';
@@ -36,9 +38,10 @@ const assessmentScreens: Screen[] = ['body', 'intake', 'result', 'goal'];
 export default function KinesioApp() {
   const [screen, setScreen] = useState<Screen>('body');
   const scrollMemory = useRef<Partial<Record<Screen, number>>>({});
+  const online = useOnlineStatus();
   const { state, update, answer, sync } = useRecovery((restored) => {
     if (restored.assessed) setScreen('home');
-  });
+  }, online);
 
   // Language (app chrome), persisted outside the recovery journey.
   const [arabic, setArabic] = useState(false);
@@ -208,10 +211,18 @@ export default function KinesioApp() {
     notify(t('Your plan is ready. Built around your answers, at your pace.', 'خطتك جاهزة ومبنية على إجاباتك وبإيقاع يناسبك.'));
   };
   const navigate = (s: Screen) => {
-    setPlaying(false);
-    scrollMemory.current[screen] = window.scrollY;
-    setScreen(s);
-    if (s === 'programme') setPhaseTab(state.phase);
+    const apply = () => {
+      setPlaying(false);
+      scrollMemory.current[screen] = window.scrollY;
+      setScreen(s);
+      if (s === 'programme') setPhaseTab(state.phase);
+    };
+    const doc = document as Document & { startViewTransition?: (update: () => void) => void };
+    if (doc.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      doc.startViewTransition(() => flushSync(apply));
+    } else {
+      apply();
+    }
   };
 
   // --- Session --------------------------------------------------------------
@@ -383,6 +394,17 @@ export default function KinesioApp() {
           </div>
         </header>
         <main className={`main-content screen-${screen}`}>
+          {!online && (
+            <div className="offline-banner" role="status">
+              <WifiOff size={16} />
+              <span>
+                {t(
+                  'You’re offline. Everything keeps working — your plan is saved on this device and syncs when you’re back.',
+                  'أنت غير متصل. التطبيق يعمل بالكامل — خطتك محفوظة على جهازك وتتزامن فور عودتك.',
+                )}
+              </span>
+            </div>
+          )}
           {screen === 'body' ? (
             <BodyStep
               t={t}

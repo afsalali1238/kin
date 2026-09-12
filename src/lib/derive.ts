@@ -32,12 +32,24 @@ export function deriveJourney(state: Recovery, phaseTab: number, rejected: strin
   const doneSessions = state.logs.filter((l) => l.session).length;
 
   const uniqueDays = [...new Set(state.logs.filter((l) => l.session).map((l) => l.date.slice(0, 10)))].sort().reverse();
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
   let streak = 0;
-  for (let d = 0; d < uniqueDays.length; d++) {
-    const date = new Date();
-    date.setDate(date.getDate() - d);
-    if (uniqueDays[d] === date.toISOString().slice(0, 10)) streak++;
-    else break;
+  if (uniqueDays.length > 0) {
+    const startsToday = uniqueDays[0] === todayStr;
+    const startsYesterday = uniqueDays[0] === yesterdayStr;
+    if (startsToday || startsYesterday) {
+      const offset = startsToday ? 0 : 1;
+      for (let i = 0; i < uniqueDays.length; i++) {
+        const expected = new Date();
+        expected.setDate(expected.getDate() - (i + offset));
+        if (uniqueDays[i] === expected.toISOString().slice(0, 10)) streak++;
+        else break;
+      }
+    }
   }
   const dailyDone = state.logs.some((l) => !l.session && l.date.slice(0, 10) === new Date().toISOString().slice(0, 10));
 

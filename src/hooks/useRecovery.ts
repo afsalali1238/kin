@@ -15,10 +15,11 @@ export type RestoredRecovery = { assessed: boolean };
  * `/api/recovery` under an anonymous id. `sync` tells the UI whether the last
  * save reached the server ('synced') or only this device ('local').
  */
-export function useRecovery(onRestored?: (restored: RestoredRecovery) => void) {
+export function useRecovery(onRestored?: (restored: RestoredRecovery) => void, online = true) {
   const [state, setState] = useState<Recovery>(initialRecovery);
   const [ready, setReady] = useState(false);
-  const [sync, setSync] = useState<'local' | 'synced'>('local');
+  const [serverSync, setServerSync] = useState<'local' | 'synced'>('local');
+  const sync: 'local' | 'synced' = online ? serverSync : 'local';
   const idRef = useRef('');
   const onRestoredRef = useRef(onRestored);
   useEffect(() => {
@@ -42,21 +43,22 @@ export function useRecovery(onRestored?: (restored: RestoredRecovery) => void) {
     if (restored.assessed) onRestoredRef.current?.({ assessed: true });
   }, []);
 
-  // Persist locally immediately, then debounce-sync to the server.
+  // Persist locally immediately, then debounce-sync to the server when online.
   useEffect(() => {
     if (!ready) return;
     localStorage.setItem(RECOVERY_STORAGE_KEY, JSON.stringify(state));
+    if (!online) return;
     const timer = setTimeout(() => {
       fetch('/api/recovery', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: idRef.current, state }),
       })
-        .then((r) => setSync(r.ok ? 'synced' : 'local'))
-        .catch(() => setSync('local'));
+        .then((r) => setServerSync(r.ok ? 'synced' : 'local'))
+        .catch(() => setServerSync('local'));
     }, SYNC_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [state, ready]);
+  }, [state, ready, online]);
 
   const update = useCallback((patch: Partial<Recovery>) => setState((s) => ({ ...s, ...patch })), []);
   const answer = useCallback(

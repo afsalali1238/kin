@@ -54,8 +54,8 @@ Built with **Next.js 16 (App Router)**, **React 19**, **Three.js / React Three F
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
-cd psyyy
+git clone https://github.com/afsalali1238/kine.git
+cd kine
 
 # Install dependencies
 npm install

@@ -4,12 +4,57 @@ import {
   exercises,
   makeProgramme,
   match,
+  presentations,
   progression,
   redFlags,
   traffic,
   variant,
   type CheckIn,
 } from './clinical';
+
+describe('redFlags — every urgent/review trigger is wired', () => {
+  it.each(['bladder', 'saddle', 'both-legs', 'chest', 'severe-headache'])('flags "%s" urgent in any region', (detail) => {
+    expect(redFlags({ ...defaultIntake, details: [detail] }, 'knee')?.level).toBe('urgent');
+  });
+
+  it.each(['weakness', 'weight-loss', 'fever', 'major-trauma', 'locked', 'weight-bearing'])('flags "%s" for in-person review', (detail) => {
+    expect(redFlags({ ...defaultIntake, details: [detail] }, 'knee')?.level).toBe('review');
+  });
+
+  it('treats night-waking pain alone as review, never urgent', () => {
+    for (const group of ['lower-back', 'neck', 'shoulder', 'knee', 'hip', 'ankle', 'elbow', 'upper-back']) {
+      expect(redFlags({ ...defaultIntake, pattern: 'night' }, group)?.level).toBe('review');
+    }
+  });
+});
+
+describe('makeProgramme — full clinical matrix (28 presentations × 3 phases × 3 irritabilities)', () => {
+  for (const p of presentations) {
+    it(`${p.id}: plans stay on-pattern, uncontraindicated and within phase caps`, () => {
+      const eligible = exercises.filter((e) => e.presentationIds.includes(p.id) && !e.contraindicatedFor.includes(p.id));
+      for (const intake of [high, low, defaultIntake]) {
+        for (const phase of [1, 2, 3]) {
+          const plan = makeProgramme(p.group, intake, p.id, phase);
+          for (const e of plan) {
+            expect(e.presentationIds).toContain(p.id);
+            expect(e.contraindicatedFor).not.toContain(p.id);
+          }
+          expect(plan.length).toBeLessThanOrEqual(4);
+          if (!eligible.length) {
+            expect(plan).toHaveLength(0);
+            continue;
+          }
+          expect(plan.length).toBeGreaterThan(0);
+          const expectedPhase = intake.irritability === 'high' || p.id === 'frozen-shoulder' ? 1 : intake.irritability === 'low' && phase === 1 ? 2 : phase;
+          if (eligible.some((e) => e.phase === expectedPhase)) {
+            expect(plan.every((e) => e.phase === expectedPhase)).toBe(true);
+          }
+          if (intake.irritability === 'high') expect(plan.every((e) => e.sets === 1)).toBe(true);
+        }
+      }
+    });
+  }
+});
 
 const high = { ...defaultIntake, irritability: 'high' as const };
 const low = { ...defaultIntake, irritability: 'low' as const };

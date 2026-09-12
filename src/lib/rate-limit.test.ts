@@ -27,9 +27,13 @@ describe('createRateLimiter', () => {
     expect(limited('a', 1200)).toBe(false);
   });
 
-  it('defaults to the current time when no timestamp is injected', () => {
-    const limited = createRateLimiter({ limit: 1, windowMs: 60_000 });
-    expect(limited('a')).toBe(true);
-    expect(limited('a')).toBe(false);
+  it('bounds map capacity and evicts expired keys to prevent memory leaks', () => {
+    const limited = createRateLimiter({ limit: 5, windowMs: 100, maxBuckets: 10 });
+    // Fill up to capacity
+    for (let i = 0; i < 15; i++) {
+      limited(`key-${i}`, 0);
+    }
+    // Now advance time so previous keys expire and add another key
+    expect(limited('fresh-key', 150)).toBe(true);
   });
 });

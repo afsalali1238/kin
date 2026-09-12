@@ -127,3 +127,19 @@ button,a,summary,[role="button"]{touch-action:manipulation}
   .bv-confirm{left:8px;right:8px}
 }
 
+.offline-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f5f0e5;
+  border: 1px solid #ece2ce;
+  color: #9a8461;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.offline-banner svg {
+  flex-shrink: 0;
+}
