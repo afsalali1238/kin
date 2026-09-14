@@ -16,6 +16,7 @@ export type SessionPlayerProps = {
   index: number;
   playing: boolean;
   seconds: number;
+  completedSets: number;
   sound: boolean;
   group: string;
   onLeave: () => void;
@@ -28,7 +29,7 @@ export type SessionPlayerProps = {
 };
 
 export default function SessionPlayer({
-  t, arabic, coarse, list, index, playing, seconds, sound, group,
+  t, arabic, coarse, list, index, playing, seconds, completedSets, sound, group,
   onLeave, onToggleSound, onTogglePlay, onResetTimer, onNext, onPrev, onAdapt,
 }: SessionPlayerProps) {
   const activeExercise = list[index];
@@ -76,7 +77,7 @@ export default function SessionPlayer({
           <span className="eyebrow">{t(activeExercise.type.replace('_', ' '), 'حركة موجّهة')}</span>
           <h1>{arabic ? activeExercise.nameAr : activeExercise.name}</h1>
           <div className="dose-box">
-            <div><strong>{activeExercise.sets}</strong><span>{t('SETS', 'مجموعات')}</span></div>
+            <div><strong>{completedSets + 1}<small>/{activeExercise.sets}</small></strong><span>{t('SET', 'مجموعة')}</span></div>
             <span>×</span>
             <div>
               <strong>{activeExercise.holdSeconds || activeExercise.reps}<small>{activeExercise.holdSeconds ? 's' : ''}</small></strong>
@@ -106,7 +107,7 @@ export default function SessionPlayer({
             <button onClick={() => onAdapt('harder')}>{t('Too easy', 'سهل جداً')}<ArrowUpRight size={16} /></button>
           </div>
           <button className="primary-button" onClick={onNext}>
-            {index === list.length - 1 ? t('Finish & check in', 'إنهاء ومتابعة') : t('Next exercise', 'التمرين التالي')}
+            {completedSets + 1 < activeExercise.sets ? t('Complete set', 'إكمال المجموعة') : index === list.length - 1 ? t('Finish & check in', 'إنهاء ومتابعة') : t('Next exercise', 'التمرين التالي')}
             <ArrowRight size={17} />
           </button>
           <span className="muted-note">

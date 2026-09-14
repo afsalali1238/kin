@@ -30,18 +30,32 @@ export function useRecovery(onRestored?: (restored: RestoredRecovery) => void, o
   // hydration, so the post-mount effect (and its setState) is intentional.
   useEffect(() => {
     let restored: Recovery = initialRecovery;
+    let hasSaved = false;
     try {
       idRef.current = localStorage.getItem(RECOVERY_ID_KEY) || makeId();
       localStorage.setItem(RECOVERY_ID_KEY, idRef.current);
       const saved = localStorage.getItem(RECOVERY_STORAGE_KEY);
-      if (saved) restored = migrateRecovery(JSON.parse(saved));
+      if (saved) { restored = migrateRecovery(JSON.parse(saved)); hasSaved = true; }
       setState(restored); // eslint-disable-line react-hooks/set-state-in-effect -- hydrate persisted recovery after mount
     } catch {
       idRef.current = idRef.current || makeId();
     }
     setReady(true);
     if (restored.assessed) onRestoredRef.current?.({ assessed: true });
-  }, []);
+    if (online && idRef.current) {
+      fetch(`/api/recovery?id=${encodeURIComponent(idRef.current)}`)
+        .then(async (response) => {
+          if (!response.ok) return;
+          const payload = (await response.json()) as { state?: unknown };
+          if (hasSaved || !payload.state) return;
+          const remote = migrateRecovery(payload.state);
+          setState(remote);
+          if (remote.assessed) onRestoredRef.current?.({ assessed: true });
+          setServerSync('synced');
+        })
+        .catch(() => undefined);
+    }
+  }, [online]);
 
   // Persist locally immediately, then debounce-sync to the server when online.
   useEffect(() => {

@@ -8,7 +8,7 @@ import { z } from 'zod';
  * Unknown keys are stripped, so the client can add fields later without old
  * servers rejecting the save (they will simply not be persisted).
  */
-export const RECOVERY_ID_PATTERN = /^[a-f0-9-]{36}$/;
+export const RECOVERY_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const bounded = (max: number) => z.string().max(max);
 const score0to10 = z.number().min(0).max(10);
@@ -56,6 +56,7 @@ export const recoveryStateSchema = z.object({
   assessed: z.boolean(),
   logs: z.array(checkInSchema).max(365),
   swaps: z.record(bounded(64), bounded(64)),
+  session: z.object({ exerciseIndex: z.number().int().min(0).max(100), seconds: z.number().int().min(0).max(3600), completedSets: z.number().int().min(0).max(50).optional(), startedAt: z.string().max(40).nullable() }).optional(),
 });
 
 export const recoveryPayloadSchema = z.object({

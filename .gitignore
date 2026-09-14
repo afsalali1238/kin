@@ -35,3 +35,5 @@ yarn-error.log*
 
 # archive
 *.zip
+test-results/
+.openclaw-tmp-build.log

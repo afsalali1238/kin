@@ -28,7 +28,9 @@ export async function placeAndConfirmPin(page: Page, viewer: ViewerKind) {
 
   const confirmPanel = page.locator('.bv-confirm');
   if (viewer === 'canvas') {
-    const box = await page.locator('.body-canvas canvas').first().boundingBox();
+    const canvasEl = page.locator('.body-canvas canvas').first();
+    await canvasEl.scrollIntoViewIfNeeded();
+    const box = await canvasEl.boundingBox();
     if (!box) throw new Error('3D canvas has no bounding box');
     // Try a few torso spots until the UV→region pick resolves a pending pin.
     for (const [ox, oy] of [[0.5, 0.45], [0.5, 0.55], [0.46, 0.4], [0.54, 0.5], [0.5, 0.34]] as const) {

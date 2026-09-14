@@ -86,7 +86,7 @@ export default function HomeScreen({
           ) : (
             <>
               <div className="daily-pain-number">{dailyPain}<span>/ 10</span></div>
-              <input aria-label="Pain today" type="range" min="0" max="10" value={dailyPain} onChange={(e) => onDailyPain(+e.target.value)} />
+              <input aria-label="Pain today" aria-valuetext={`${dailyPain} out of 10`} type="range" min="0" max="10" value={dailyPain} onChange={(e) => onDailyPain(+e.target.value)} />
               <div className="slider-labels"><span>{t('No pain', 'لا ألم')}</span><span>{t('Worst imaginable', 'أشد ألم ممكن')}</span></div>
               <p className="checkin-question">{t('Compared with before your last session?', 'مقارنة بما قبل جلستك السابقة؟')}</p>
               <div className="chips">

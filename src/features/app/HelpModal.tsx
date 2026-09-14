@@ -1,10 +1,10 @@
 'use client';
-import { ArrowRight, Crosshair, Footprints, ScanLine, Settings2, X } from 'lucide-react';
+import { ArrowRight, Crosshair, Download, Footprints, ScanLine, Settings2, Trash2, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { T } from '@/lib/app-types';
 import IconButton from '@/components/ui/IconButton';
 
-export default function HelpModal({ t, onClose }: { t: T; onClose: () => void }) {
+export default function HelpModal({ t, onClose, onExport, onDelete }: { t: T; onClose: () => void; onExport: () => void; onDelete: () => void }) {
   const steps: [LucideIcon, string, string][] = [
     [
       ScanLine,
@@ -24,7 +24,7 @@ export default function HelpModal({ t, onClose }: { t: T; onClose: () => void })
   ];
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label="How it works" onClick={(e) => e.stopPropagation()}>
+      <div className="modal" role="dialog" aria-modal="true" aria-label="How it works" tabIndex={-1} autoFocus onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }} onClick={(e) => e.stopPropagation()}>
         <IconButton icon={X} label="Close guidance" onClick={onClose} />
         <span className="round-feature"><Crosshair size={26} /></span>
         <h2>{t('A starting point, in three small steps.', 'نقطة بداية في ثلاث خطوات صغيرة.')}</h2>
@@ -34,6 +34,10 @@ export default function HelpModal({ t, onClose }: { t: T; onClose: () => void })
             <div><h3>{title}</h3><p>{sub}</p></div>
           </div>
         ))}
+        <div className="data-actions" aria-label={t('Your data', 'بياناتك')}>
+          <button className="ghost-button" onClick={onExport}><Download size={17} />{t('Export my data', 'تصدير بياناتي')}</button>
+          <button className="danger-button" onClick={onDelete}><Trash2 size={17} />{t('Delete my data', 'حذف بياناتي')}</button>
+        </div>
         <button className="primary-button wide" onClick={onClose}>{t('I’m ready', 'أنا مستعد')}<ArrowRight size={17} /></button>
       </div>
     </div>

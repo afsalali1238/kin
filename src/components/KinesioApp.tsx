@@ -10,6 +10,7 @@ import { exercises, makeProgramme, regions, variant, type CheckIn, type Exercise
 import type { Screen } from '@/lib/app-types';
 import { deriveJourney } from '@/lib/derive';
 import { makeId } from '@/lib/id';
+import { RECOVERY_ID_KEY, RECOVERY_STORAGE_KEY } from '@/lib/recovery-storage';
 import { useRecovery } from '@/hooks/useRecovery';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import type { PainPin } from '@/components/body/BodyViewer';
@@ -36,6 +37,9 @@ const navs: { screen: Screen; label: string; ar: string; icon: LucideIcon }[] = 
 const assessmentScreens: Screen[] = ['body', 'intake', 'result', 'goal'];
 
 export default function KinesioApp() {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+  }, []);
   const [screen, setScreen] = useState<Screen>('body');
   const scrollMemory = useRef<Partial<Record<Screen, number>>>({});
   const online = useOnlineStatus();
@@ -63,9 +67,11 @@ export default function KinesioApp() {
 
   // App chrome + session player.
   const [toast, setToast] = useState('');
+  const [removedPin, setRemovedPin] = useState<PainPin | null>(null);
   const [help, setHelp] = useState(false);
   const [phaseTab, setPhaseTab] = useState(1);
   const [exerciseIndex, setExerciseIndex] = useState(0);
+  const [completedSets, setCompletedSets] = useState(0);
   const [trafficOpen, setTrafficOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [seconds, setSeconds] = useState(30);
@@ -78,6 +84,16 @@ export default function KinesioApp() {
   const [learnArticle, setLearnArticle] = useState<number | null>(null);
   const [sessionHadPain, setSessionHadPain] = useState(false);
   const [coarse, setCoarse] = useState(false);
+  const timerEnd = useRef<number | null>(null);
+  const wakeLock = useRef<WakeLockSentinel | null>(null);
+
+  useEffect(() => {
+    if (state.session?.startedAt && screen !== 'session') {
+      setExerciseIndex(state.session.exerciseIndex); // eslint-disable-line react-hooks/set-state-in-effect -- restore persisted session on load
+      setSeconds(state.session.seconds);
+      setCompletedSets(state.session.completedSets || 0); // eslint-disable-line react-hooks/set-state-in-effect
+    }
+  }, [state.session?.startedAt, state.session?.exerciseIndex, state.session?.seconds, state.session?.completedSets, screen]);
 
   // Read persisted language after mount (localStorage is unavailable during SSR).
   useEffect(() => {
@@ -85,6 +101,7 @@ export default function KinesioApp() {
   }, []);
   useEffect(() => {
     document.documentElement.lang = arabic ? 'ar' : 'en';
+    document.documentElement.dir = arabic ? 'rtl' : 'ltr';
     localStorage.setItem('kinesio-language', arabic ? 'ar' : 'en');
   }, [arabic]);
   useEffect(() => {
@@ -96,7 +113,7 @@ export default function KinesioApp() {
   }, []);
   useEffect(() => {
     if (!toast) return;
-    const timer = setTimeout(() => setToast(''), 5500);
+    const timer = setTimeout(() => { setToast(''); setRemovedPin(null); }, 5500);
     return () => clearTimeout(timer);
   }, [toast]);
   useEffect(() => {
@@ -106,10 +123,13 @@ export default function KinesioApp() {
 
   useEffect(() => {
     if (!playing) return;
+    if ('wakeLock' in navigator) navigator.wakeLock.request('screen').then((lock) => { wakeLock.current = lock; }).catch(() => undefined);
+    timerEnd.current = Date.now() + seconds * 1000;
     const timer = setInterval(
       () =>
         setSeconds((s) => {
-          if (s <= 1) {
+          const next = Math.max(0, Math.ceil(((timerEnd.current || Date.now()) - Date.now()) / 1000));
+          if (next <= 0) {
             setPlaying(false);
             if (sound && 'speechSynthesis' in window) {
               const cue = new SpeechSynthesisUtterance(arabic ? 'أحسنت، استرح قليلاً' : 'Well done. Take a short rest.');
@@ -118,23 +138,57 @@ export default function KinesioApp() {
             }
             return 0;
           }
-          return s - 1;
+          return next;
         }),
       1000,
     );
-    return () => clearInterval(timer);
-  }, [playing, sound, arabic]);
+    return () => { clearInterval(timer); wakeLock.current?.release().catch(() => undefined); wakeLock.current = null; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- timer is initialized once per play/exercise change; update is stable
+  }, [playing, sound, arabic, exerciseIndex]);
+
+  // Flush session progress to storage when paused or advancing, to prevent write amplification on every timer tick.
+  useEffect(() => {
+    if (!playing && state.session?.startedAt) {
+      update({ session: { exerciseIndex, seconds, completedSets, startedAt: state.session.startedAt } });
+    }
+  }, [playing, exerciseIndex, seconds, completedSets, state.session?.startedAt, update]);
+
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && playing && 'wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').then((lock) => { wakeLock.current = lock; }).catch(() => undefined);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, [playing]);
 
   const journey = deriveJourney(state, phaseTab, rejected);
   const { region, group, matches, top, currentPresentation, flag, dose, plan, progress, real, painValues, doneSessions, streak, dailyDone } = journey;
   const activeExercise = sessionList[exerciseIndex];
 
   const notify = (message: string) => setToast(message);
+  const exportData = () => {
+    const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), recovery: state }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `kine-recovery-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+  const deleteData = () => {
+    if (!window.confirm(t('Delete all recovery data stored on this device? This cannot be undone.', 'حذف جميع بيانات التعافي المحفوظة على هذا الجهاز؟ لا يمكن التراجع عن ذلك.'))) return;
+    localStorage.removeItem(RECOVERY_STORAGE_KEY);
+    localStorage.removeItem(RECOVERY_ID_KEY);
+    window.location.reload();
+  };
 
   // --- Pin flow (one precise point) ---------------------------------------
   const selectRegion = (regionId: string, point?: [number, number, number]) => {
     const found = regions.find((r) => r.id === regionId);
     if (!found) return;
+    setRemovedPin(null);
     if (point) {
       const newPin: PainPin = { id: makeId(), regionId, point, intensity: state.intake.pain };
       setPendingPin(newPin);
@@ -154,13 +208,26 @@ export default function KinesioApp() {
     if (pendingPin) {
       update({ region: pendingPin.regionId, pins: [pendingPin] });
       setPendingPin(null);
+      setRemovedPin(null);
       notify(t('Spot saved. One precise point is enough.', 'تم حفظ الموضع. نقطة واحدة تكفي.'));
     }
   };
   const adjustPin = () => setPendingPin(null);
   const clearSelection = () => {
+    const removed = state.pins[0] || null;
+    if (removed) {
+      setRemovedPin(removed);
+      notify(t('Point removed.', '\u062a\u0645\u062a \u0625\u0632\u0627\u0644\u0629 \u0627\u0644\u0646\u0642\u0637\u0629.'));
+    }
     update({ region: '', pins: [] });
     setPendingPin(null);
+  };
+
+  const undoRemovePin = () => {
+    if (!removedPin) return;
+    update({ region: removedPin.regionId, pins: [removedPin] });
+    setRemovedPin(null);
+    notify(t('Point restored.', '\u062a\u0645\u062a \u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0627\u0644\u0646\u0642\u0637\u0629.'));
   };
   const changePinIntensity = (n: number) => {
     answer({ pain: n });
@@ -242,9 +309,14 @@ export default function KinesioApp() {
     const list = makeProgramme(group, state.intake, state.presentationId, state.phase, state.goal).map(
       (e) => exercises.find((x) => x.id === state.swaps[e.id] && !x.contraindicatedFor.includes(state.presentationId)) || e,
     );
+    const savedSession = state.session?.startedAt ? state.session : null;
+    const index = savedSession ? Math.min(savedSession.exerciseIndex, Math.max(0, list.length - 1)) : 0;
+    const initialSeconds = list[index]?.holdSeconds || 30;
     setSessionList(list);
-    setExerciseIndex(0);
-    setSeconds(list[0]?.holdSeconds || 30);
+    setExerciseIndex(index);
+    setCompletedSets(0);
+    setSeconds(savedSession?.seconds || initialSeconds);
+    update({ session: { exerciseIndex: index, seconds: savedSession?.seconds || initialSeconds, completedSets: savedSession?.completedSets || 0, startedAt: savedSession?.startedAt || new Date().toISOString() } });
     setSessionHadPain(false);
     setPlaying(false);
     setTrafficOpen(false);
@@ -266,6 +338,13 @@ export default function KinesioApp() {
   };
   const nextExercise = () => {
     setPlaying(false);
+    const current = sessionList[exerciseIndex];
+    if (current && completedSets + 1 < current.sets) {
+      setCompletedSets((value) => value + 1);
+      setSeconds(current.holdSeconds || 30);
+      return;
+    }
+    setCompletedSets(0);
     if (exerciseIndex < sessionList.length - 1) {
       setExerciseIndex((i) => i + 1);
       setSeconds(sessionList[exerciseIndex + 1].holdSeconds || 30);
@@ -296,7 +375,7 @@ export default function KinesioApp() {
   };
   const finish = () => {
     const log: CheckIn = { date: new Date().toISOString(), pain: sessionPain, feeling: sessionHadPain ? 'painful' : feeling, session: true, phase: state.phase };
-    update({ logs: [...state.logs, log] });
+    update({ logs: [...state.logs, log], session: { exerciseIndex: 0, seconds: 0, completedSets: 0, startedAt: null } });
     notify(t('Session complete. A little consistency goes a long way.', 'اكتملت الجلسة. الاستمرارية تصنع الفرق.'));
     setScreen('home');
   };
@@ -526,6 +605,7 @@ export default function KinesioApp() {
               coarse={coarse}
               list={sessionList}
               index={exerciseIndex}
+              completedSets={completedSets}
               playing={playing}
               seconds={seconds}
               sound={sound}
@@ -570,14 +650,30 @@ export default function KinesioApp() {
           </footer>
         </main>
       </div>
+      <nav className="mobile-bottom-nav" aria-label={t('Primary navigation', 'التنقل الرئيسي')}>
+        {navs.filter((item) => item.screen !== 'body').map((item) => {
+          const Icon = item.icon;
+          const active = screen === item.screen || (item.screen === 'home' && assessmentScreens.includes(screen));
+          return (
+            <button key={item.screen} className={active ? 'active' : ''} onClick={() => navigate(item.screen)} aria-current={active ? 'page' : undefined}>
+              <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+              <span>{t(item.label === 'Overview' ? 'Today' : item.label === 'My programme' ? 'Programme' : item.label === 'My progress' ? 'Progress' : 'Learn', item.ar)}</span>
+            </button>
+          );
+        })}
+        <button onClick={() => setHelp(true)}><CircleHelp size={20} strokeWidth={1.8} /><span>{t('Help', 'مساعدة')}</span></button>
+      </nav>
       {toast && (
         <div className="toast" role="status">
           <Check size={19} />
           <span>{toast}</span>
+          {removedPin && (
+            <button className="toast-action" onClick={undoRemovePin}>{t('Undo', '\u062a\u0631\u0627\u062c\u0639')}</button>
+          )}
           <button aria-label="Dismiss notification" onClick={() => setToast('')}><X size={16} /></button>
         </div>
       )}
-      {help && <HelpModal t={t} onClose={() => setHelp(false)} />}
+      {help && <HelpModal t={t} onClose={() => setHelp(false)} onExport={exportData} onDelete={deleteData} />}
       {trafficOpen && <TrafficModal t={t} onClose={() => setTrafficOpen(false)} onLaunch={launchSession} />}
     </div>
   );

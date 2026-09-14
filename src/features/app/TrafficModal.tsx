@@ -6,7 +6,7 @@ import IconButton from '@/components/ui/IconButton';
 export default function TrafficModal({ t, onClose, onLaunch }: { t: T; onClose: () => void; onLaunch: () => void }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal traffic-modal" role="dialog" aria-modal="true" aria-label="Your pain traffic light" onClick={(e) => e.stopPropagation()}>
+      <div className="modal traffic-modal" role="dialog" aria-modal="true" aria-label="Your pain traffic light" tabIndex={-1} autoFocus onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }} onClick={(e) => e.stopPropagation()}>
         <IconButton icon={X} label="Close" onClick={onClose} />
         <span className="eyebrow">{t('BEFORE WE MOVE', 'قبل أن نتحرّك')}</span>
         <h2>{t('Your body has a traffic light.', 'لجسمك إشارة مرور.')}</h2>

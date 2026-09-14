@@ -27,7 +27,7 @@ test('body step at 375px: pin flow, 44px chips, offline banner, axe', async ({ p
   const viewer = await waitForViewer(page);
 
   // Mobile chrome: bottom nav, and nothing overflows horizontally.
-  await expect(page.locator('.sidebar nav')).toBeVisible();
+  await expect(page.locator('.mobile-bottom-nav')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await axeNoCritical(page, 'body step');
 

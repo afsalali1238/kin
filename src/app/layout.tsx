@@ -5,6 +5,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "kinē — 3D Interactive Physiotherapy & Rehabilitation Guide",
   description: "Clinical-grade interactive 3D physiotherapy, musculoskeletal assessment, and personalised rehabilitation exercises.",
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg", apple: "/icon.svg" },
 };
 
 export const viewport: Viewport = {

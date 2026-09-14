@@ -56,6 +56,7 @@ export default function IntakeStep({ t, arabic, step, intake, region, group, pin
                   </label>
                   <input
                     aria-label={key}
+                    aria-valuetext={`${intake[key]} out of 10`}
                     type="range"
                     min="0"
                     max="10"

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Printer } from 'lucide-react';
 import { defaultIntake, doseInfo, makeProgramme, regions, type Intake } from '@/lib/clinical';
-import { RECOVERY_STORAGE_KEY } from '@/lib/recovery-storage';
+import { migrateRecovery, RECOVERY_STORAGE_KEY } from '@/lib/recovery-storage';
 import { figurePairSvg } from '@/lib/illustrations';
 
 type Recovery = { region: string; intake: Intake; goal: string; presentationId: string; phase: number; assessed: boolean };
@@ -17,7 +17,7 @@ export default function Handout() {
  useEffect(() => {
   try {
    const saved = localStorage.getItem(RECOVERY_STORAGE_KEY);
-   if (saved) setState({ ...initial, ...JSON.parse(saved) }); // eslint-disable-line react-hooks/set-state-in-effect -- hydrate persisted recovery after mount
+   if (saved) setState({ ...initial, ...migrateRecovery(JSON.parse(saved)) }); // eslint-disable-line react-hooks/set-state-in-effect -- hydrate persisted recovery after mount
   } catch {}
   setReady(true);
  }, []);

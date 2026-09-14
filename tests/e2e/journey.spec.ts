@@ -15,11 +15,13 @@ test('locate pain → intake → programme → session → check-in', async ({ p
   await placeAndConfirmPin(page, viewer);
   const continueCta = page.getByRole('button', { name: 'Yes, let’s continue', exact: true });
 
+  await page.clock.install({ time: Date.now() });
   await page.getByRole('button', { name: 'Remove point', exact: true }).click();
   await expect(page.getByText('Point removed.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Place one point to continue', exact: true })).toBeDisabled();
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(page.getByText('Point restored.')).toBeVisible();
+  await page.clock.resume();
   await expect(continueCta).toBeEnabled();
   await continueCta.click();
 
@@ -49,7 +51,13 @@ test('locate pain → intake → programme → session → check-in', async ({ p
   await page.getByRole('button', { name: 'Too painful', exact: true }).click();
   await expect(page.locator('.session-instructions h1')).not.toHaveText(firstExercise);
 
-  for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Next exercise', exact: true }).click();
+  // Advance through all sets and exercises until the session is finished.
+  let iterationCap = 0;
+  while (await page.getByRole('button', { name: 'Finish & check in', exact: true }).isHidden()) {
+    if (++iterationCap > 50) throw new Error('Infinite loop in session progression');
+    await page.getByRole('button', { name: /Complete set|Next exercise/i }).click();
+    await page.waitForTimeout(150);
+  }
   await page.getByRole('button', { name: 'Finish & check in', exact: true }).click();
   await page.getByRole('button', { name: 'Save & finish', exact: true }).click();
 

@@ -1,5 +1,6 @@
 import { initialRecovery, type Recovery } from '@/lib/app-types';
 import type { PainPin } from '@/components/body/BodyViewer';
+import { recoveryStateSchema } from '@/lib/recovery-schema';
 
 export const RECOVERY_STORAGE_KEY = 'kinesio-recovery';
 export const RECOVERY_ID_KEY = 'kinesio-id';
@@ -39,8 +40,7 @@ export function migrateRecovery(raw: unknown): Recovery {
       ? { ...initialRecovery.intake, ...(stored.intake as Partial<Recovery['intake']>) }
       : initialRecovery.intake;
   const phase = typeof stored.phase === 'number' && stored.phase >= 1 && stored.phase <= 3 ? stored.phase : 1;
-  const logs = Array.isArray(stored.logs) ? (stored.logs as Recovery['logs']) : [];
-  return {
+  const candidate = {
     ...initialRecovery,
     region: typeof stored.region === 'string' ? stored.region : '',
     pins,
@@ -49,7 +49,10 @@ export function migrateRecovery(raw: unknown): Recovery {
     presentationId: typeof stored.presentationId === 'string' ? stored.presentationId : initialRecovery.presentationId,
     phase,
     assessed: stored.assessed === true,
-    logs,
+    logs: Array.isArray(stored.logs) ? stored.logs : [],
     swaps: typeof stored.swaps === 'object' && stored.swaps !== null ? (stored.swaps as Record<string, string>) : {},
+    session: typeof stored.session === 'object' && stored.session !== null ? stored.session : initialRecovery.session,
   };
+  const parsed = recoveryStateSchema.safeParse(candidate);
+  return parsed.success ? (parsed.data as Recovery) : { ...initialRecovery, region: typeof stored.region === 'string' ? stored.region : '', pins, assessed: stored.assessed === true };
 }

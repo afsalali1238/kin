@@ -22,7 +22,7 @@ export default function SessionCheckIn({ t, sessionPain, feeling, onSessionPain,
       <div className="result-card">
         <div className="pain-slider">
           <label>{t('Highest pain during your session?', 'أعلى ألم أثناء الجلسة؟')}<b>{sessionPain}<small>/10</small></b></label>
-          <input aria-label="Pain during session" type="range" min="0" max="10" value={sessionPain} onChange={(e) => onSessionPain(+e.target.value)} />
+          <input aria-label="Pain during session" aria-valuetext={`${sessionPain} out of 10`} type="range" min="0" max="10" value={sessionPain} onChange={(e) => onSessionPain(+e.target.value)} />
           <div className="slider-labels"><span>{t('No pain', 'لا ألم')}</span><span>{t('Worst imaginable', 'أشد ألم ممكن')}</span></div>
         </div>
         <h3>{t('How did the exercises feel?', 'كيف كانت التمارين؟')}</h3>

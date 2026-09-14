@@ -24,6 +24,7 @@ export type Recovery = {
   assessed: boolean;
   logs: CheckIn[];
   swaps: Record<string, string>;
+  session?: { exerciseIndex: number; seconds: number; completedSets: number; startedAt: string | null };
 };
 
 export const initialRecovery: Recovery = {
@@ -36,6 +37,7 @@ export const initialRecovery: Recovery = {
   assessed: false,
   logs: [],
   swaps: {},
+  session: { exerciseIndex: 0, seconds: 0, completedSets: 0, startedAt: null },
 };
 
 /** Bilingual copy helper: t(english, arabic). */

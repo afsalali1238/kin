@@ -9,6 +9,9 @@
 
 /* ---- Mobile-first ergonomics (additions) ---- */
 html{-webkit-tap-highlight-color:transparent}
+body{padding-bottom:env(safe-area-inset-bottom)}
+.mobile-bottom-nav{display:none}
+.data-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}.data-actions button{min-height:44px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;font-size:12px}.danger-button{background:#f7ebe7;color:#9a574b;border:1px solid #ecd6cf}.danger-button:hover{background:#f2dfd9}
 button,a,summary,[role="button"]{touch-action:manipulation}
 .app-shell{min-height:100vh;min-height:100dvh}
 /* ---- Session readability: lift washed-out greys to ink-olive ---- */
@@ -33,6 +36,25 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 @keyframes figIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .exercise-demo.figure-loading{min-height:240px;display:flex;align-items:center;justify-content:center}
 @media(max-width:720px){.k-figure-wrap svg{height:210px}}
+@media(max-width:720px){
+  .sidebar{display:none}
+  .main-shell{margin-inline-start:0;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+  .topbar{height:58px;padding:0 16px;position:sticky;top:0;z-index:20;background:rgba(251,252,247,.94);backdrop-filter:blur(12px)}
+  .breadcrumb{font-size:12px;gap:7px}
+  .breadcrumb>svg,.quiet-message,.top-avatar{display:none}
+  .topbar-right{gap:0}
+  .language-button{border:0;padding:8px;font-size:11px}
+  .language-button>span{display:none}
+  .main-content{padding:20px 16px 0;min-height:calc(100dvh - 58px)}
+  .mobile-bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;z-index:40;inset-inline:0;bottom:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(252,252,248,.96);border-top:1px solid var(--line);backdrop-filter:blur(14px)}
+  .mobile-bottom-nav button{display:flex;min-height:48px;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:none;color:#8a907f;font-size:10px;font-weight:500;border-radius:10px}
+  .mobile-bottom-nav button.active{color:var(--olive-dark);background:#e9eede}
+  .mobile-bottom-nav button:focus-visible{outline-offset:-2px}
+  .page-footer{display:none}
+  input[type=range]{height:12px}
+  input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px}
+}
 
 /* ——— Body step: 3D hero + one-point sheet ——— */
 .body-workspace.body-step{display:grid;grid-template-columns:minmax(0,1fr) 360px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);min-height:612px}
@@ -85,6 +107,9 @@ button,a,summary,[role="button"]{touch-action:manipulation}
 .sheet-search-row input{flex:1;border:0;background:transparent;font-size:13px;outline:none}
 .sticky-cta{position:sticky;bottom:0;background:#fdfdf9;padding-top:12px;margin-top:14px;box-shadow:0 -10px 18px -14px rgba(48,55,46,.22)}
 .region-search.sheet-body .chip-grid{margin-top:8px}
+.all-regions-wrap{position:relative}
+.region-search.sheet-body{top:calc(100% + 2px);left:0;right:0}
+.toast .toast-action{border:1px solid #71855a;border-radius:5px;padding:10px 16px;min-height:44px;font-size:11px;font-weight:500;flex-shrink:0;margin-inline-start:6px;align-self:center;color:#f4f7ed}
 
 @media(max-width:1100px){.body-workspace.body-step{grid-template-columns:minmax(0,1fr) 320px}}
 

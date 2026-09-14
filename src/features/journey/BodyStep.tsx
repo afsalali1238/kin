@@ -190,7 +190,7 @@ export default function BodyStep(props: BodyStepProps) {
                     <b>{pendingPin ? t('Preview', 'معاينة') : t('Set', 'تم')}</b>
                   </div>
                   <label>{t('Pain intensity', 'شدة الألم')}<b>{pain}<small>/10</small></b></label>
-                  <input aria-label="Pain intensity" type="range" min="0" max="10" value={pain} onChange={(e) => onPinIntensity(+e.target.value)} />
+                  <input aria-label="Pain intensity" aria-valuetext={`${pain} out of 10`} type="range" min="0" max="10" value={pain} onChange={(e) => onPinIntensity(+e.target.value)} />
                   <div className="slider-labels"><span>{t('Mild', 'خفيف')}</span><span>{t('Severe', 'شديد')}</span></div>
                   <div className="pin-single-actions">
                     {pendingPin ? (
@@ -220,6 +220,7 @@ export default function BodyStep(props: BodyStepProps) {
               </div>
             </>
           )}
+          <div className="all-regions-wrap">
           <button className="all-regions" aria-expanded={allRegions} onClick={onToggleAllRegions}>
             {t(allRegions ? 'Hide all body areas' : 'Explore all body areas', allRegions ? 'إخفاء مناطق الجسم' : 'استكشف جميع مناطق الجسم')}
             <ChevronDown size={15} className={allRegions ? 'rotate' : ''} />
@@ -249,6 +250,7 @@ export default function BodyStep(props: BodyStepProps) {
               })}
             </div>
           )}
+          </div>
           <div className="localise-tip">
             <div className="tip-icon"><Sparkles size={18} /></div>
             <div>
