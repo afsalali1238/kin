@@ -99,7 +99,8 @@ export default function Handout() {
     .handout-cue-row{display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;align-items:center;gap:9px;margin:20px 0}
     .handout-figure{margin:12px 0 2px}
     .handout-figure svg{width:270px;max-width:100%;height:auto;display:block}
-    .handout-cue-row svg{color:var(--olive)}
+    .handout-cue-row{display:grid;grid-template-columns:1fr;align-items:center;gap:9px;margin:20px 0}
+    .handout-cue-row svg{display:none;color:var(--olive)}
     .handout-cue-card{background:var(--pale);padding:15px;border-radius:6px;min-height:100px}
     .handout-cue-card>span{font-size:11px;color:var(--olive)}
     .handout-cue-card>p{font-size:13px;line-height:1.7;margin-top:6px;color:var(--ink)}
@@ -107,14 +108,14 @@ export default function Handout() {
     .handout-mistakes{font-size:12px;color:#a17b52;margin-top:12px}
     .handout-note{font-size:12px;color:var(--muted);margin-top:12px}
     .handout-footer-note{font-size:11px;color:var(--muted);margin-top:20px}
+    @media (min-width:720px){
+     .handout-cue-row{grid-template-columns:1fr 20px 1fr 20px 1fr}
+     .handout-cue-row svg{display:block}
+    }
     @media print{
      .handout-toolbar{display:none!important}
      .handout-page{padding:0!important;background:white}
      .handout-exercise{break-inside:avoid}
-    }
-    @media(max-width:720px){
-     .handout-cue-row{grid-template-columns:1fr}
-     .handout-cue-row svg{display:none}
     }
    `}</style>
   </main>

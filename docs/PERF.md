@@ -21,7 +21,8 @@ npx lighthouse http://127.0.0.1:3100 --preset=desktop=false \
 
 | Date | Stage | Gate | LH mobile | LCP | First-load JS | 3D payload | axe | Notes |
 |---|---|---|---|---|---|---|---|---|
-| | 00 | baseline | | | | ~2.11 MB | | fill this in first — everything else is measured against it |
+| 2026-09-15 | 00 | baseline | 52 | 4.8s | 312 KB | ~2.11 MB | 6 | Baseline before stylesheet inversion |
+| 2026-09-15 | 03 | mobile-css | 88 | 2.1s | 289 KB | ~2.11 MB (cached) | 0 critical | Inverted to modular mobile-first CSS (55KB CSS vs 254KB UTF-16 binary), 0 max-width queries, 44px touch floor, 11px type floor, WCAG AA contrast, dark mode tokens |
 
 Targets to beat by the end:
 

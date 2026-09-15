@@ -1,0 +1,173 @@
+/* Progress Screen */
+.progress-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+@media (min-width: 720px) {
+  .progress-stat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.progress-stat-grid .dashboard-card span:first-child {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.progress-stat-grid .dashboard-card strong {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: var(--ink);
+}
+
+.progress-stat-grid .dashboard-card strong small {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.progress-stat-grid .dashboard-card p {
+  font-size: var(--fs-caption);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.progress-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+@media (min-width: 950px) {
+  .progress-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+}
+
+.chart-key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.chart-key i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--olive);
+  display: inline-block;
+}
+
+.chart-dates {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.pain-map-card div[dir="ltr"] {
+  height: 200px;
+  width: 100%;
+  position: relative;
+}
+
+.pain-map-card > span {
+  font-size: var(--fs-caption);
+  color: var(--muted);
+  text-align: center;
+  margin-top: 8px;
+  display: block;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 720px) {
+  .review-card {
+    flex-direction: row;
+    padding: 28px;
+    align-items: flex-start;
+  }
+}
+
+.review-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--pale);
+  color: var(--olive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.review-card h2 {
+  font-size: var(--fs-h2);
+  margin: 6px 0 8px;
+}
+
+.phase-history {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 20px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.phase-history h3 {
+  font-size: var(--fs-h3);
+  margin-bottom: 4px;
+}
+
+.phase-history > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--fs-body);
+}
+
+.history-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  flex-shrink: 0;
+}
+
+.history-dot.filled {
+  background: var(--olive);
+  border-color: var(--olive);
+}
+
+.phase-history > div span:last-child {
+  margin-inline-start: auto;
+  font-size: var(--fs-caption);
+  color: var(--muted);
+}

@@ -1,0 +1,96 @@
+:root {
+  /* Core palette */
+  --bg: #f7f8f3;
+  --panel: #fcfcf8;
+  --ink: #30372e;
+  --muted: #5e6659; /* darkened from #8a8e82 to achieve >= 4.5:1 AA contrast on --bg */
+  --line: #e4e7dd;
+  --olive: #77855d;
+  --olive-dark: #64734c;
+  --pale: #eef1e7;
+  --sidebar: #f0f2e9;
+
+  /* Semantic tokens */
+  --border-subtle: #dde3d3;
+  --amber-bg: #fdf6e9;
+  --amber-border: #f2ddbe;
+  --amber-ink: #855f24;
+  --danger-bg: #f7ebe7;
+  --danger-border: #ecd6cf;
+  --danger-ink: #9a574b;
+  --danger-hover: #f2dfd9;
+  --toast-bg: #36442e;
+  --toast-ink: #f4f7ed;
+  --toast-border: #71855a;
+  --success-dot: #60a85f;
+  --sheet-handle: #dde3d3;
+
+  /* Type scale — phone first, clamp() grows it */
+  --fs-caption: 12px;
+  --fs-label: clamp(11px, 2.8vw, 12px);
+  --fs-body: clamp(14px, 3.6vw, 15px);
+  --fs-lead: clamp(15px, 4vw, 17px);
+  --fs-h3: clamp(16px, 4.2vw, 18px);
+  --fs-h2: clamp(20px, 5.4vw, 26px);
+  --fs-h1: clamp(26px, 7vw, 37px);
+
+  /* Spacing (4px base) */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+
+  /* Touch geometry */
+  --touch: 44px;
+  --nav-h: calc(60px + env(safe-area-inset-bottom));
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(48, 55, 46, 0.08);
+  --shadow-md: 0 6px 18px rgba(48, 55, 46, 0.08);
+  --shadow-lg: 0 14px 30px -18px rgba(48, 55, 46, 0.12);
+  --shadow-modal: 0 20px 40px rgba(48, 55, 46, 0.16);
+
+  /* Fonts */
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Manrope", "DM Sans", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121714;
+    --panel: #1a201c;
+    --ink: #e9ede8;
+    --muted: #9aa898;
+    --line: #2c3630;
+    --olive: #a8c184;
+    --olive-dark: #c0d49f;
+    --pale: #1f2a20;
+    --sidebar: #161c18;
+
+    --border-subtle: #2e3b33;
+    --amber-bg: #2a2216;
+    --amber-border: #443722;
+    --amber-ink: #f0c36b;
+    --danger-bg: #2e1c19;
+    --danger-border: #4a2822;
+    --danger-ink: #f49f92;
+    --danger-hover: #3a221e;
+    --toast-bg: #1c261e;
+    --toast-ink: #e8f0e5;
+    --toast-border: #405943;
+    --success-dot: #74bf73;
+    --sheet-handle: #3a473e;
+  }
+}
