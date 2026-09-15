@@ -117,6 +117,27 @@ export default function BodyStep(props: BodyStepProps) {
             />
             {query && <button aria-label="Clear search" className="icon-button" onClick={onClearQuery}><X size={14} /></button>}
           </div>
+          <div className="stage-chips" role="group" aria-label={t('Common pain areas', 'مناطق ألم شائعة')}>
+            {common.map(([id, label, ar]) => {
+              const area = regions.find((r) => r.id === id);
+              return (
+                <button
+                  key={id}
+                  className={region?.id === id ? 'selected' : ''}
+                  aria-pressed={region?.id === id}
+                  onClick={() => {
+                    if (!area) return;
+                    // Align the view, then place the point on the region focus:
+                    // the mannequin rotates, zooms, highlights and pins in one tap.
+                    onBackChange(area.view === 'back');
+                    onSelectRegion(id, area.focusTarget as [number, number, number]);
+                  }}
+                >
+                  {t(label, ar)}
+                </button>
+              );
+            })}
+          </div>
           <div className="body-canvas" dir="ltr">
             <LazyBodyViewer active={region?.id || ''} back={back} sex={sex} zoom={zoom} reset={reset} pins={viewerPins} onSelect={onSelectRegion} />
           </div>

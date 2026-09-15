@@ -22,7 +22,8 @@ export async function waitForViewer(page: Page): Promise<ViewerKind> {
  * (region buttons), stopping with the Continue CTA enabled but not clicked.
  */
 export async function placeAndConfirmPin(page: Page, viewer: ViewerKind) {
-  await page.getByRole('button', { name: 'Lower back', exact: true }).click();
+  // The floating stage chips share region names, so scope to the panel grid.
+  await page.locator('.region-grid').getByRole('button', { name: 'Lower back', exact: true }).click();
   // Region alone is not enough — the CTA stays disabled until a point exists.
   await expect(page.getByRole('button', { name: 'Place one point to continue', exact: true })).toBeDisabled();
 

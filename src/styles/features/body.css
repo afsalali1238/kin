@@ -29,8 +29,8 @@
 .viewer-wrap {
   position: relative;
   width: 100%;
-  height: clamp(420px, 56dvh, 560px);
-  min-height: 420px;
+  height: clamp(500px, 68dvh, 660px);
+  min-height: 500px;
   overflow: hidden;
   background: radial-gradient(ellipse at 50% 44%, #f1f0e8 0%, #f7f7f0 55%, #f8f9f3 100%);
   isolation: isolate;
@@ -47,7 +47,7 @@
 
 .stage-top {
   position: absolute;
-  top: 14px;
+  top: 12px;
   inset-inline: 14px;
   z-index: 4;
   display: flex;
@@ -65,9 +65,15 @@
   color: var(--muted);
 }
 
+/* 44px touch floor for the stage header action */
+.stage-top .subtle-button {
+  min-height: var(--touch);
+  padding: 8px 12px;
+}
+
 .viewer-search {
   position: absolute;
-  top: 52px;
+  top: 60px;
   left: 12px;
   right: 12px;
   z-index: 4;
@@ -98,10 +104,54 @@
   }
 }
 
+/* Full-bleed viewport: the canvas owns the whole stage and the glass
+   controls float over it, so the mannequin is framed crown-to-feet. */
 .body-canvas {
   position: absolute;
-  inset: 90px 0 96px;
+  inset: 0;
   z-index: 1;
+}
+
+/* Floating quick-select chips under the search bar. One tap rotates the
+   mannequin, zooms in, highlights the region and places a precise pin. */
+.stage-chips {
+  position: absolute;
+  top: 112px;
+  left: 12px;
+  right: 12px;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.stage-chips > * {
+  pointer-events: auto;
+}
+
+.stage-chips button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch);
+  padding: 8px 14px;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  background: rgba(252, 252, 248, 0.92);
+  border: 1px solid var(--border-subtle);
+  color: var(--muted);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+.stage-chips button.selected {
+  background: var(--pale);
+  border-color: var(--olive);
+  color: var(--olive-dark);
+  font-weight: 600;
 }
 
 .fallback-body {
@@ -112,21 +162,29 @@
   margin: 0 auto;
 }
 
+/* Orientation caption only fits once the stage is tall/wide enough;
+   the Front/Back dock carries the same information on phones. */
 .orientation-label {
-  position: absolute;
-  bottom: 124px;
-  left: 14px;
-  z-index: 2;
-  font-size: var(--fs-label);
-  color: var(--muted);
-  display: flex;
-  gap: 6px;
-  align-items: center;
+  display: none;
 }
 
-[dir="rtl"] .orientation-label {
-  left: auto;
-  right: 14px;
+@media (min-width: 720px) {
+  .orientation-label {
+    position: absolute;
+    bottom: 124px;
+    left: 14px;
+    z-index: 2;
+    font-size: var(--fs-label);
+    color: var(--muted);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  [dir="rtl"] .orientation-label {
+    left: auto;
+    right: 14px;
+  }
 }
 
 .canvas-tools {
@@ -157,9 +215,11 @@
   margin: 2px 4px;
 }
 
+/* Bottom thumb zone: the segmented dock sits low on the stage with a
+   frosted-glass finish so the model stays visible through it. */
 .map-dock {
   position: absolute;
-  bottom: 84px;
+  bottom: 20px;
   left: 8px;
   right: 8px;
   z-index: 4;
@@ -188,8 +248,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 38px;
-  padding: 6px 12px;
+  min-height: var(--touch);
+  padding: 8px 14px;
   font-size: var(--fs-label);
   font-weight: 500;
   border-radius: var(--radius-full);
@@ -209,8 +269,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 38px;
-  padding: 6px 14px;
+  min-height: var(--touch);
+  padding: 8px 14px;
   font-size: var(--fs-label);
   font-weight: 500;
   border-radius: var(--radius-full);
@@ -218,12 +278,14 @@
   border: 1px solid var(--border-subtle);
   color: var(--muted);
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
   cursor: pointer;
 }
 
+/* Sits just above the dock (which wraps to two rows on phones) */
 .rotate-hint {
   position: absolute;
-  bottom: 12px;
+  bottom: 134px;
   inset-inline: 0;
   z-index: 3;
   font-size: var(--fs-label);
@@ -237,9 +299,27 @@
   padding: 0 12px;
 }
 
+@media (min-width: 720px) {
+  .rotate-hint {
+    bottom: 78px;
+  }
+}
+
+/* Floating confirmation: slides up from the dock as the point is placed */
+@keyframes bv-confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .bv-confirm {
   position: absolute;
-  bottom: 112px;
+  bottom: 76px;
   left: 12px;
   right: 12px;
   z-index: 5;
@@ -249,6 +329,7 @@
   padding: 14px;
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(10px);
+  animation: bv-confirm-in 240ms cubic-bezier(0.2, 0.8, 0.25, 1);
 }
 
 .bv-confirm-head {
@@ -285,6 +366,12 @@
   gap: 8px;
   margin-top: 10px;
   flex-wrap: wrap;
+}
+
+/* One-tap confirm/adjust/somewhere-else actions meet the 44px floor */
+.bv-confirm-actions button {
+  min-height: var(--touch);
+  flex: 1;
 }
 
 /* Localise Panel: Bottom sheet on mobile, sidebar on desktop */
