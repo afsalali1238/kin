@@ -480,6 +480,59 @@
   }
 }
 
+/* Body screen only: a single compact row (~50px) on phones so the 3D
+   stage starts right above the fold. Full heading returns at 720px. */
+.screen-body .page-heading {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.screen-body .page-heading > div {
+  min-width: 0;
+}
+
+.screen-body .page-heading .eyebrow,
+.screen-body .page-heading p {
+  display: none;
+}
+
+.screen-body .page-heading h1 {
+  font-size: clamp(19px, 5.2vw, 22px);
+  letter-spacing: -0.5px;
+}
+
+.screen-body .page-heading .time-pill {
+  flex-shrink: 0;
+  padding: 5px 10px;
+}
+
+@media (min-width: 720px) {
+  .screen-body .page-heading {
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .screen-body .page-heading .eyebrow {
+    display: flex;
+  }
+
+  .screen-body .page-heading p {
+    display: block;
+  }
+
+  .screen-body .page-heading h1 {
+    font-size: var(--fs-h1);
+    letter-spacing: -1px;
+  }
+
+  .screen-body .page-heading .time-pill {
+    padding: 6px 12px;
+  }
+}
+
 .eyebrow {
   display: flex;
   align-items: center;

@@ -20,26 +20,40 @@ export async function waitForViewer(page: Page): Promise<ViewerKind> {
  * Selects a region and then places and confirms the single precise point.
  * Works with the 3D canvas (UV pick on the torso) and the 2D fallback
  * (region buttons), stopping with the Continue CTA enabled but not clicked.
+ * The pin must land in the lower-back family (abdomen / lower back) —
+ * the journey's movement questions are keyed to that region group.
  */
 export async function placeAndConfirmPin(page: Page, viewer: ViewerKind) {
-  await page.getByRole('button', { name: 'Lower back', exact: true }).click();
+  // The floating stage chips share region names, so scope to the panel grid.
+  await page.locator('.region-grid').getByRole('button', { name: 'Lower back', exact: true }).click();
   // Region alone is not enough — the CTA stays disabled until a point exists.
   await expect(page.getByRole('button', { name: 'Place one point to continue', exact: true })).toBeDisabled();
 
   const confirmPanel = page.locator('.bv-confirm');
+  const confirmRegion = async () =>
+    /abdomen|lower back/i.test(await page.locator('.bv-confirm-head span').innerText().catch(() => ''));
   if (viewer === 'canvas') {
     const canvasEl = page.locator('.body-canvas canvas').first();
     await canvasEl.scrollIntoViewIfNeeded();
     const box = await canvasEl.boundingBox();
     if (!box) throw new Error('3D canvas has no bounding box');
-    // Try a few torso spots until the UV→region pick resolves a pending pin.
-    for (const [ox, oy] of [[0.5, 0.45], [0.5, 0.55], [0.46, 0.4], [0.54, 0.5], [0.5, 0.34]] as const) {
+    // The full-bleed stage frames the mannequin crown-to-feet, so the lower
+    // front trunk sits at roughly 40–46% of the canvas height. A click
+    // replaces the pending pin, so retry until the UV→region pick resolves
+    // into the lower-back family.
+    for (const [ox, oy] of [[0.5, 0.4], [0.5, 0.43], [0.5, 0.46], [0.46, 0.41], [0.54, 0.44]] as const) {
       await page.mouse.click(box.x + box.width * ox, box.y + box.height * oy);
-      if (await confirmPanel.isVisible().catch(() => false)) break;
+      if ((await confirmPanel.isVisible().catch(() => false)) && (await confirmRegion())) break;
       await page.waitForTimeout(400);
     }
+    if (!(await confirmRegion())) {
+      // Deterministic fallback: the stage chip pins the region focus point.
+      await page.locator('.stage-chips').getByRole('button', { name: 'Lower back', exact: true }).click();
+    }
   } else {
-    await page.locator('.fallback-body [role="button"]').first().click();
+    // The 2D fallback shows 'Abdomen' (view: both) on the front view —
+    // a lower-back family region, unlike the first region (forehead/neck).
+    await page.locator('.fallback-body').getByRole('button', { name: 'Abdomen', exact: true }).click();
   }
 
   // The live-region confirmation panel offers the pending point for review.
