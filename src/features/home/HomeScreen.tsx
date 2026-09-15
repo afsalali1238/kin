@@ -1,5 +1,5 @@
 'use client';
-import { ArrowRight, ArrowUpRight, BookOpen, Check, Clock3, Dumbbell, Flame, Heart, Play, ScanLine, TrendingDown } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BookOpen, Check, Clock3, Dumbbell, Flame, Heart, Play, ScanLine, Sparkles, TrendingDown } from 'lucide-react';
 import type { Region } from '@/lib/clinical';
 import type { Journey } from '@/lib/derive';
 import type { T } from '@/lib/app-types';
@@ -20,6 +20,8 @@ export type HomeScreenProps = {
   dailyFeeling: string;
   real: boolean;
   painValues: number[];
+  canInstall?: boolean;
+  onInstall?: () => void;
   onDailyPain: (pain: number) => void;
   onDailyFeeling: (feeling: string) => void;
   onSaveDaily: () => void;
@@ -31,6 +33,7 @@ export type HomeScreenProps = {
 
 export default function HomeScreen({
   t, arabic, assessed, phase, streak, dose, region, dailyDone, dailyPain, dailyFeeling, real, painValues,
+  canInstall, onInstall,
   onDailyPain, onDailyFeeling, onSaveDaily, onStart, onFindStart, onSeeProgress, onLearn,
 }: HomeScreenProps) {
   return (
@@ -43,6 +46,15 @@ export default function HomeScreen({
         </div>
         <span className="badge"><Flame size={15} />{streak} {t('day streak', 'أيام متتالية')}</span>
       </div>
+      {canInstall && onInstall && real && (
+        <div className="sample-banner" style={{ background: 'var(--panel)', borderColor: 'var(--olive)' }}>
+          <Sparkles size={17} />
+          <span>{t('Install kinē for instant offline access and quick daily sessions.', 'ثبّت التطبيق على هاتفك للوصول السريع بدون اتصال بالإنترنت.')}</span>
+          <button className="primary-button small" onClick={onInstall} style={{ marginInlineStart: 'auto' }}>
+            {t('Install app', 'تثبيت التطبيق')}
+          </button>
+        </div>
+      )}
       {!assessed ? (
         <div className="home-session">
           <div>
@@ -65,8 +77,9 @@ export default function HomeScreen({
               <span><Heart size={16} />{t('At your pace', 'بإيقاعك')}</span>
             </div>
             <button className="primary-button" onClick={onStart}><Play size={17} />{t('Start today’s session', 'ابدأ جلسة اليوم')}<ArrowRight size={18} /></button>
+            <button className="text-button" onClick={onFindStart} style={{ marginTop: 6 }}><ScanLine size={15} />{t('View or update body map', 'عرض أو تعديل خريطة الجسم')}</button>
           </div>
-          <div className="home-body" dir="ltr">
+          <div className="home-body" dir="ltr" role="button" tabIndex={0} onClick={onFindStart} onKeyDown={(e) => { if (e.key === 'Enter') onFindStart(); }} title={t('View 3D body map', 'عرض خريطة الجسم ثلاثية الأبعاد')} style={{ cursor: 'pointer' }}>
             <LazyBodyViewer active={region?.id || ''} back={region?.view === 'back'} mini />
           </div>
         </div>

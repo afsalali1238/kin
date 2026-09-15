@@ -1,0 +1,145 @@
+/* Learn Screen */
+.heading-icon {
+  color: var(--olive);
+  align-self: flex-start;
+}
+
+.featured-article {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  margin: 16px 0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s;
+}
+
+.featured-article:hover {
+  border-color: var(--olive);
+}
+
+@media (min-width: 950px) {
+  .featured-article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px;
+    padding: 28px;
+  }
+}
+
+.learning-art {
+  display: none;
+}
+
+@media (min-width: 950px) {
+  .learning-art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--olive);
+    opacity: 0.6;
+    position: relative;
+  }
+}
+
+.art-orbit {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px dashed var(--olive);
+  opacity: 0.4;
+}
+
+.article-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+@media (min-width: 720px) {
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.article-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  text-align: start;
+  cursor: pointer;
+  min-height: var(--touch);
+  transition: all 0.2s;
+  color: var(--ink);
+}
+
+.article-card:hover {
+  border-color: var(--olive);
+}
+
+.article-card h3 {
+  font-size: var(--fs-body);
+  margin: 0;
+}
+
+.article-card span:last-child {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-caption);
+  color: var(--olive);
+  font-weight: 500;
+}
+
+.article-detail {
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.article-detail h1 {
+  font-size: var(--fs-h1);
+}
+
+.article-detail p {
+  font-size: var(--fs-lead);
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.presentation-education {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.presentation-education details {
+  margin-top: 6px;
+}
+
+.presentation-education details p {
+  font-size: var(--fs-caption);
+  color: var(--muted);
+  margin-top: 6px;
+}

@@ -13,6 +13,7 @@ import { makeId } from '@/lib/id';
 import { RECOVERY_ID_KEY, RECOVERY_STORAGE_KEY } from '@/lib/recovery-storage';
 import { useRecovery } from '@/hooks/useRecovery';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useInstallPrompt } from '@/hooks/useInstallPrompt';
 import type { PainPin } from '@/components/body/BodyViewer';
 import BodyStep from '@/features/journey/BodyStep';
 import IntakeStep from '@/features/journey/IntakeStep';
@@ -43,6 +44,7 @@ export default function KinesioApp() {
   const [screen, setScreen] = useState<Screen>('body');
   const scrollMemory = useRef<Partial<Record<Screen, number>>>({});
   const online = useOnlineStatus();
+  const { canInstall, install } = useInstallPrompt();
   const { state, update, answer, sync } = useRecovery((restored) => {
     if (restored.assessed) setScreen('home');
   }, online);
@@ -91,7 +93,7 @@ export default function KinesioApp() {
     if (state.session?.startedAt && screen !== 'session') {
       setExerciseIndex(state.session.exerciseIndex); // eslint-disable-line react-hooks/set-state-in-effect -- restore persisted session on load
       setSeconds(state.session.seconds);
-      setCompletedSets(state.session.completedSets || 0); // eslint-disable-line react-hooks/set-state-in-effect
+      setCompletedSets(state.session.completedSets || 0);
     }
   }, [state.session?.startedAt, state.session?.exerciseIndex, state.session?.seconds, state.session?.completedSets, screen]);
 
@@ -587,6 +589,8 @@ export default function KinesioApp() {
               dailyFeeling={dailyFeeling}
               real={real}
               painValues={painValues}
+              canInstall={canInstall}
+              onInstall={install}
               onDailyPain={setDailyPain}
               onDailyFeeling={setDailyFeeling}
               onSaveDaily={saveDaily}
